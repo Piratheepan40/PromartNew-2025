@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Bell, LogOut, User, Menu, X } from "lucide-react";
@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/promart-logo.png";
 import ThemeToggle from "@/components/ThemeToggle";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface NavbarProps {
   unreadCount?: number;
@@ -20,6 +20,29 @@ const Navbar: React.FC<NavbarProps> = ({
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll effect for transparent navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navClasses = isHomePage
+    ? `fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-slate-950/80 backdrop-blur-lg border-b border-white/10" : "bg-transparent border-transparent"
+    }`
+    : "border-b bg-card sticky top-0 z-50";
+
+  // Helper for homepage-specific button styles
+  const getButtonClass = (className: string = "") => {
+    if (!isHomePage) return className;
+    return `text-slate-200 hover:bg-white/10 hover:text-white ${className}`;
+  };
 
   const handleLogout = () => {
     logout();
@@ -46,13 +69,13 @@ const Navbar: React.FC<NavbarProps> = ({
         <>
           {commonLinks.map((link) => (
             <Link key={link.to} to={link.to}>
-              <Button variant="ghost" size="sm" className="hidden sm:flex">
+              <Button variant="ghost" size="sm" className={`hidden sm:flex ${getButtonClass()}`}>
                 {link.label}
               </Button>
             </Link>
           ))}
           <Link to="/login">
-            <Button variant="outline" size="sm" className="hidden sm:flex">
+            <Button variant="outline" size="sm" className={`hidden sm:flex ${isHomePage ? "border-amber-500/50 text-amber-500 hover:bg-amber-500/10 hover:text-amber-400" : ""}`}>
               Login
             </Button>
           </Link>
@@ -300,11 +323,11 @@ const Navbar: React.FC<NavbarProps> = ({
     <motion.nav
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="border-b bg-card sticky top-0 z-50"
+      className={navClasses}
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="ProMart" className="h-40 sm:h-40" />
+          <img src={logo} alt="ProMart" className={`h-12 w-auto sm:h-16 transition-all ${isHomePage ? "brightness-0 invert opacity-90" : ""}`} />
         </Link>
 
         {/* Desktop Navigation */}
@@ -321,9 +344,9 @@ const Navbar: React.FC<NavbarProps> = ({
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (
-              <X className="h-5 w-5" />
+              <X className={`h-5 w-5 ${isHomePage ? "text-slate-200" : ""}`} />
             ) : (
-              <Menu className="h-5 w-5" />
+              <Menu className={`h-5 w-5 ${isHomePage ? "text-slate-200" : ""}`} />
             )}
           </Button>
         </div>
@@ -341,7 +364,7 @@ const Navbar: React.FC<NavbarProps> = ({
               className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 sm:hidden"
               onClick={() => setIsMobileMenuOpen(false)}
             />
-            
+
             {/* Mobile Menu Panel */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}

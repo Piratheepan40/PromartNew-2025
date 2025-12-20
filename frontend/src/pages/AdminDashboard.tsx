@@ -14,6 +14,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
@@ -35,6 +37,7 @@ import {
   Clock,
   Building2,
   Trash,
+  Menu,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import StatusBadge from "@/components/StatusBadge";
@@ -362,6 +365,44 @@ const AdminDashboard = () => {
     </div>
   );
 
+  const SidebarContent = () => (
+    <div className="h-full py-4">
+      <div className="mb-6 px-4">
+        <h2 className="text-xl font-bold tracking-tight">Admin Panel</h2>
+        <p className="text-sm text-muted-foreground">Manage your platform</p>
+      </div>
+      <ScrollArea className="h-[calc(100vh-8rem)]">
+        <div className="space-y-1 px-2">
+          {sidebarItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeSection === item.id;
+            return (
+              <Button
+                key={item.id}
+                variant={isActive ? "secondary" : "ghost"}
+                className="w-full justify-start"
+                onClick={() => {
+                  setActiveSection(item.id);
+                  // Close mobile sheet if open (handled by SheetPrimitive's internal state usually, 
+                  // but we might need a controlled state if we want to force close. 
+                  // For now, let's rely on user clicking outside or we can add a state later if needed.)
+                }}
+              >
+                <Icon className="mr-2 h-4 w-4" />
+                <span className="flex-1 text-left">{item.label}</span>
+                {item.count !== undefined && (
+                  <span className="ml-auto rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                    {item.count}
+                  </span>
+                )}
+              </Button>
+            );
+          })}
+        </div>
+      </ScrollArea>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar
@@ -384,43 +425,35 @@ const AdminDashboard = () => {
         />
       )}
 
-      <div className="container mx-auto flex gap-6 px-4 py-8">
-        {/* Sidebar */}
-        <aside className="w-64 shrink-0">
-          <Card className="sticky top-4 p-4">
-            <div className="mb-4">
-              <h2 className="font-semibold">Admin Panel</h2>
-              <p className="text-xs text-muted-foreground">
-                Manage your platform
-              </p>
-            </div>
-            <nav className="space-y-1">
-              {sidebarItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = activeSection === item.id;
-                return (
-                  <Button
-                    key={item.id}
-                    variant={isActive ? "secondary" : "ghost"}
-                    className="w-full justify-start"
-                    onClick={() => setActiveSection(item.id)}
-                  >
-                    <Icon className="mr-2 h-4 w-4" />
-                    <span className="flex-1 text-left">{item.label}</span>
-                    {item.count !== undefined && (
-                      <span className="ml-auto rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                        {item.count}
-                      </span>
-                    )}
-                  </Button>
-                );
-              })}
-            </nav>
+      <div className="container mx-auto flex flex-col lg:flex-row gap-6 px-4 py-8">
+
+        {/* Mobile Sidebar Trigger */}
+        <div className="lg:hidden">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="w-full flex justify-between items-center">
+                <span className="flex items-center gap-2">
+                  <Menu className="h-4 w-4" />
+                  Menu
+                </span>
+                <span className="text-xs text-muted-foreground capitalize">{activeSection}</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-64 p-0">
+              <SidebarContent />
+            </SheetContent>
+          </Sheet>
+        </div>
+
+        {/* Desktop Sidebar */}
+        <aside className="hidden lg:block w-64 shrink-0">
+          <Card className="sticky top-24 h-[calc(100vh-8rem)]">
+            <SidebarContent />
           </Card>
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1">
+        <main className="flex-1 min-w-0">
           <motion.div
             key={activeSection}
             initial={{ opacity: 0, y: 20 }}
@@ -913,7 +946,7 @@ const AdminDashboard = () => {
           </DialogHeader>
 
           {viewDocsListing?.verificationDocuments &&
-          viewDocsListing.verificationDocuments.length > 0 ? (
+            viewDocsListing.verificationDocuments.length > 0 ? (
             <div className="space-y-3">
               {viewDocsListing.verificationDocuments.map((doc) => (
                 <Card key={doc.id} className="p-4">

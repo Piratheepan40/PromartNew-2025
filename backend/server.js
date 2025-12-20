@@ -16,6 +16,9 @@ import blogRoutes from "./routes/blogRoutes.js";
 import listingRoutes from "./routes/listingRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
+import inquiryRoutes from "./routes/inquiryRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js";
+
 
 dotenv.config();
 
@@ -69,6 +72,9 @@ app.use("/api/blogs", blogRoutes);
 app.use("/api/listings", listingRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/inquiries", inquiryRoutes);
+app.use("/api/ai", aiRoutes);
+
 
 // Production Frontend Serve (optional if deploying full MERN)
 if (NODE_ENV === "production") {

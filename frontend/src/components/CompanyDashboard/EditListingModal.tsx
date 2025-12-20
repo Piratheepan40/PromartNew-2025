@@ -9,7 +9,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Upload, X, File, Image as ImageIcon, Plus } from "lucide-react";
+import { Upload, X, File, Image as ImageIcon, Plus, Wand2, Loader2 } from "lucide-react";
+import axios from "axios";
+
 import { useToast } from "@/hooks/use-toast";
 import { updateListing } from "@/services/listingService";
 
@@ -31,6 +33,10 @@ const EditListingModal = ({ open, onOpenChange, listing, onUpdated }) => {
   const [existingImages, setExistingImages] = useState<any[]>([]);
   const [newDocs, setNewDocs] = useState<File[]>([]);
   const [newImages, setNewImages] = useState<File[]>([]);
+  const [isOptimizing, setIsOptimizing] = useState(false);
+
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 
   // ✅ Pre-fill when editing
   useEffect(() => {
@@ -111,12 +117,12 @@ const EditListingModal = ({ open, onOpenChange, listing, onUpdated }) => {
 
   // ✅ Upload Handlers
   const handleFileUpload = (e) => {
-    const files = Array.from(e.target.files || []);
+    const files = Array.from(e.target.files || []) as File[];
     setNewDocs((prev) => [...prev, ...files]);
   };
 
   const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files || []);
+    const files = Array.from(e.target.files || []) as File[];
     setNewImages((prev) => [...prev, ...files]);
   };
 
@@ -126,9 +132,50 @@ const EditListingModal = ({ open, onOpenChange, listing, onUpdated }) => {
     setExistingImages((prev) => prev.filter((_, index) => index !== i));
 
   const removeNewDoc = (i: number) =>
-    setNewDocs((prev) => prev.filter((_, index) => index !== i));
+    setNewDocs((prev: File[]) => prev.filter((_, index) => index !== i));
   const removeNewImage = (i: number) =>
-    setNewImages((prev) => prev.filter((_, index) => index !== i));
+    setNewImages((prev: File[]) => prev.filter((_, index) => index !== i));
+
+  // ✨ AI Optimize Handler
+  const handleOptimize = async () => {
+    if (!formData.title || !formData.description) {
+      toast({
+        title: "Missing info",
+        description: "Please enter a title and description first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsOptimizing(true);
+    try {
+      const { data } = await axios.post(`${API_URL}/ai/optimize`, {
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+      });
+
+      setFormData((prev) => ({
+        ...prev,
+        title: data.title || prev.title,
+        description: data.description || prev.description,
+      }));
+
+      toast({
+        title: "Content Optimized!",
+        description: "AI has refined your title and description.",
+      });
+    } catch (error: any) {
+      console.error("Optimization error:", error);
+      toast({
+        title: "Optimization failed",
+        description: error.response?.data?.message || "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsOptimizing(false);
+    }
+  };
 
   // ✅ Submit Edited Listing
   const handleSubmit = async (e: React.FormEvent) => {
@@ -246,7 +293,25 @@ const EditListingModal = ({ open, onOpenChange, listing, onUpdated }) => {
           </div>
 
           <div className="md:col-span-2 space-y-2">
-            <Label>Description</Label>
+            <div className="flex items-center justify-between">
+              <Label>Description</Label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleOptimize}
+                disabled={isOptimizing || !formData.title || !formData.description}
+                className="h-8 text-primary gap-1.5 hover:text-primary hover:bg-primary/10"
+              >
+                {isOptimizing ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Wand2 size={14} />
+                )}
+                <span className="text-xs font-semibold">Optimize with AI</span>
+              </Button>
+            </div>
+
             <Textarea
               rows={4}
               value={formData.description}

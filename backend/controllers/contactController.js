@@ -12,16 +12,22 @@ export const createContact = async (req, res) => {
 
     const newContact = await Contact.create({ name, email, subject, message });
 
-    // Optional: Send admin notification email
-    try {
+    // 📧 Send admin notification email
+    const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
+    if (adminEmail) {
       await sendEmail(
-        process.env.ADMIN_EMAIL,
+        adminEmail,
         `📩 New Contact Message: ${subject}`,
         `You have a new message from ${name} (${email}):\n\n${message}`
-      );
-    } catch (error) {
-      console.error("Failed to send admin email:", error);
+      ).catch(error => console.error("Failed to send admin email:", error));
     }
+
+    // 📧 Send confirmation email to user
+    await sendEmail(
+      email,
+      `We received your message: ${subject}`,
+      `Hi ${name},\n\nThank you for contacting us. We have received your message and will get back to you shortly.\n\nYour Message:\n${message}\n\nBest regards,\nThe ProMart Team`
+    ).catch(error => console.error("Failed to send user confirmation email:", error));
 
     res.status(201).json({
       success: true,

@@ -9,7 +9,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Upload, X, File, Image as ImageIcon, Plus } from "lucide-react";
+import { Upload, X, File, Image as ImageIcon, Plus, Wand2, Loader2 } from "lucide-react";
+import axios from "axios";
+
 import { useToast } from "@/hooks/use-toast";
 import { createListing } from "@/services/listingService";
 import { useAuth } from "@/contexts/AuthContext";
@@ -40,6 +42,10 @@ const CreateListingModal = ({
   const [featureInput, setFeatureInput] = useState("");
   const [verificationDocs, setVerificationDocs] = useState<File[]>([]);
   const [companyImages, setCompanyImages] = useState<File[]>([]);
+  const [isOptimizing, setIsOptimizing] = useState(false);
+
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 
   // ➕ Add Key Feature
   const addFeature = () => {
@@ -103,6 +109,47 @@ const CreateListingModal = ({
       setCompanyImages([]);
     }
     onOpenChange(open);
+  };
+
+  // ✨ AI Optimize Handler
+  const handleOptimize = async () => {
+    if (!formData.title || !formData.description) {
+      toast({
+        title: "Missing info",
+        description: "Please enter a title and description first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsOptimizing(true);
+    try {
+      const { data } = await axios.post(`${API_URL}/ai/optimize`, {
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+      });
+
+      setFormData((prev) => ({
+        ...prev,
+        title: data.title || prev.title,
+        description: data.description || prev.description,
+      }));
+
+      toast({
+        title: "Content Optimized!",
+        description: "AI has refined your title and description.",
+      });
+    } catch (error: any) {
+      console.error("Optimization error:", error);
+      toast({
+        title: "Optimization failed",
+        description: error.response?.data?.message || "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsOptimizing(false);
+    }
   };
 
   // ✅ Handle Submit
@@ -205,9 +252,26 @@ const CreateListingModal = ({
 
           {/* 📝 Description */}
           <div className="md:col-span-2 space-y-2">
-            <Label htmlFor="description" className="text-sm sm:text-base">
-              Description
-            </Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="description" className="text-sm sm:text-base">
+                Description
+              </Label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleOptimize}
+                disabled={isOptimizing || !formData.title || !formData.description}
+                className="h-8 text-primary gap-1.5 hover:text-primary hover:bg-primary/10"
+              >
+                {isOptimizing ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Wand2 size={14} />
+                )}
+                <span className="text-xs font-semibold">Optimize with AI</span>
+              </Button>
+            </div>
             <Textarea
               id="description"
               value={formData.description}

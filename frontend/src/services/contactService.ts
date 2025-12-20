@@ -1,6 +1,6 @@
 import API from "../api/API";
 
-console.log("🔗 API URL:", `${API}/contact`);
+// console.log("🔗 API Base URL:", API.defaults.baseURL);
 // ✅ Fetch all contacts (for admin)
 export const getContacts = async () => {
   const res = await API.get("/contact");

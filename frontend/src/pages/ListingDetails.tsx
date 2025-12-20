@@ -32,6 +32,18 @@ import { formatDistanceToNow } from "date-fns";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
 import { getApprovedListings } from "@/services/listingService";
+import { sendInquiry } from "@/services/inquiryService";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 const ListingDetails = () => {
   const { id } = useParams();
@@ -39,6 +51,47 @@ const ListingDetails = () => {
   const { user } = useAuth();
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [submittingInquiry, setSubmittingInquiry] = useState(false);
+
+  // Inquiry Form State
+  const [inquiryForm, setInquiryForm] = useState({
+    name: user?.companyName || "",
+    email: user?.email || "",
+    phone: user?.phone || "",
+    subject: "",
+    message: "",
+  });
+
+  const handleInquiryChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setInquiryForm({ ...inquiryForm, [e.target.name]: e.target.value });
+  };
+
+  const handleInquirySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!listing) return;
+
+    setSubmittingInquiry(true);
+    try {
+      await sendInquiry({
+        listingId: listing._id,
+        ...inquiryForm,
+        subject: inquiryForm.subject || `Inquiry about ${listing.title}`,
+      });
+      toast.success("Inquiry sent successfully!");
+      setIsContactModalOpen(false);
+      setInquiryForm({
+        ...inquiryForm,
+        subject: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Failed to send inquiry:", error);
+      toast.error("Failed to send inquiry. Please try again.");
+    } finally {
+      setSubmittingInquiry(false);
+    }
+  };
 
   const isAdmin = user?.role === "admin";
 
@@ -49,7 +102,7 @@ const ListingDetails = () => {
   const loadListing = async () => {
     try {
       const listings = await getApprovedListings();
-      const found = listings.find((l) => l._id === id);
+      const found = listings.find((l) => String(l._id) === id);
       setListing(found || null);
     } catch (error) {
       console.error("Failed to load listing:", error);
@@ -146,20 +199,93 @@ const ListingDetails = () => {
               </div>
 
               <div className="flex gap-3">
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group"
-                >
-                  Contact Company
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                {/* <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-amber-500 text-amber-400 hover:bg-amber-500/10 hover:text-amber-300 backdrop-blur-sm bg-white/5"
-                >
-                  Save Listing
-                </Button> */}
+                <Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      size="lg"
+                      className="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group"
+                    >
+                      Contact Company
+                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[500px] border-slate-200 shadow-2xl">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl font-bold text-slate-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+                        Contact {listing.companyName}
+                      </DialogTitle>
+                      <DialogDescription className="text-slate-600">
+                        Interested in this listing? Send a direct inquiry to the company.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={handleInquirySubmit} className="space-y-5 mt-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-slate-700">Name</label>
+                          <Input
+                            name="name"
+                            required
+                            placeholder="Your Name"
+                            value={inquiryForm.name}
+                            onChange={handleInquiryChange}
+                            className="border-slate-200 focus:border-amber-500"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-slate-700">Email</label>
+                          <Input
+                            name="email"
+                            type="email"
+                            required
+                            placeholder="your@email.com"
+                            value={inquiryForm.email}
+                            onChange={handleInquiryChange}
+                            className="border-slate-200 focus:border-amber-500"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-700">Phone (Optional)</label>
+                        <Input
+                          name="phone"
+                          placeholder="Your Phone Number"
+                          value={inquiryForm.phone}
+                          onChange={handleInquiryChange}
+                          className="border-slate-200 focus:border-amber-500"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-700">Subject</label>
+                        <Input
+                          name="subject"
+                          placeholder={`Inquiry about ${listing.title}`}
+                          value={inquiryForm.subject}
+                          onChange={handleInquiryChange}
+                          className="border-slate-200 focus:border-amber-500"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-700">Message</label>
+                        <Textarea
+                          name="message"
+                          required
+                          placeholder="Tell the company what you're interested in..."
+                          rows={4}
+                          value={inquiryForm.message}
+                          onChange={handleInquiryChange}
+                          className="border-slate-200 focus:border-amber-500 min-h-[100px]"
+                        />
+                      </div>
+                      <Button
+                        type="submit"
+                        disabled={submittingInquiry}
+                        className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-bold h-12 text-lg shadow-lg"
+                      >
+                        {submittingInquiry ? "Sending..." : "Send Inquiry"}
+                      </Button>
+                    </form>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </motion.div>
@@ -516,6 +642,7 @@ const ListingDetails = () => {
                   <Button
                     className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group"
                     size="lg"
+                    onClick={() => setIsContactModalOpen(true)}
                   >
                     Contact Company
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />

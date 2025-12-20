@@ -20,6 +20,8 @@ import ListingDetails from "./pages/ListingDetails";
 import Settings from "./pages/Settings";
 import UserManagement from "./pages/UserManagement";
 import NotFound from "./pages/NotFound";
+import Chatbot from "./components/Chatbot";
+
 
 const queryClient = new QueryClient();
 
@@ -38,7 +40,7 @@ const AppRoutes = () => {
       <Route path="/verify-otp" element={<OTPVerify />} />
       <Route path="/listings" element={<PublicListings />} />
       <Route path="/listings/:id" element={<ListingDetails />} />
-      
+
       <Route
         path="/dashboard"
         element={
@@ -47,7 +49,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/admin"
         element={
@@ -85,10 +87,12 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AuthProvider>
           <AppRoutes />
+          <Chatbot />
         </AuthProvider>
+
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

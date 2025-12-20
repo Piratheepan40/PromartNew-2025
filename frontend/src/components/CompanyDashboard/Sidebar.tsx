@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { LayoutDashboard, Settings as SettingsIcon } from "lucide-react";
+import { LayoutDashboard, Settings as SettingsIcon, MessageSquare } from "lucide-react";
 
 interface SidebarProps {
-  activeSection: "dashboard" | "settings";
-  setActiveSection: (section: "dashboard" | "settings") => void;
+  activeSection: "dashboard" | "leads" | "settings";
+  setActiveSection: (section: "dashboard" | "leads" | "settings") => void;
 }
 
 const Sidebar = ({ activeSection, setActiveSection }: SidebarProps) => (
@@ -21,6 +21,14 @@ const Sidebar = ({ activeSection, setActiveSection }: SidebarProps) => (
           onClick={() => setActiveSection("dashboard")}
         >
           <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
+        </Button>
+
+        <Button
+          variant={activeSection === "leads" ? "secondary" : "ghost"}
+          className="w-full justify-start"
+          onClick={() => setActiveSection("leads")}
+        >
+          <MessageSquare className="mr-2 h-4 w-4" /> Leads (Inquiries)
         </Button>
 
         <Button

@@ -19,29 +19,29 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Main Content - Single Row Layout */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-          
+
           {/* Brand & Contact */}
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
             <Link to="/" className="mb-3">
-              <img 
-                src={logo} 
-                alt="ProMart" 
+              <img
+                src={logo}
+                alt="ProMart"
                 className="h-12 brightness-0 invert"
               />
             </Link>
             <p className="text-sm text-slate-300 mb-3 max-w-xs">
               Connecting businesses worldwide with premium B2B solutions.
             </p>
-            
+
             {/* Contact Info - Horizontal on desktop */}
-            <div className="flex flex-col sm:flex-row gap-4 text-xs text-slate-400">
-              <div className="flex items-center gap-1">
-                <Mail className="h-3 w-3" />
-                <span>promartlk@gmail.com</span>
+            <div className="flex flex-col sm:flex-row gap-4 text-sm text-slate-400 mt-4">
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-amber-500" />
+                <a href="mailto:promartlk@gmail.com" className="hover:text-white transition-colors">promartlk@gmail.com</a>
               </div>
-              <div className="flex items-center gap-1">
-                <Phone className="h-3 w-3" />
-                <span>+94 779520933</span>
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-amber-500" />
+                <a href="tel:+94779520933" className="hover:text-white transition-colors">077 952 0933</a>
               </div>
             </div>
           </div>

@@ -45,41 +45,57 @@ export const getAllCompanies = async (req, res) => {
   }
 };
 
-// 🟩 Get all listings
+// 🟩 Get all listings (with optional filtering)
 export const getAllListings = async (req, res) => {
   try {
+    const { status } = req.query;
+    const whereClause = {};
+
+    if (status && status !== "all") {
+      whereClause.status = status;
+    }
+
     const listings = await Listing.findAll({
+      where: whereClause,
       include: [
         {
           model: User,
-          attributes: ["companyName", "email", "phone"]
+          attributes: ["id", "companyName", "email", "phone"]
         }
       ],
       order: [["createdAt", "DESC"]]
     });
 
-    // Transform for frontend compatibility (companyId population, _id)
+    // Transform for frontend which expects _id and companyId object
     const formattedListings = listings.map(listing => {
       const l = listing.toJSON();
       l._id = l.id;
-      l.companyId = l.User ? { ...l.User, _id: l.companyId } : l.companyId; // mimic population
-      // Also ensure companyId inside the object has _id if needed? 
-      // Logic: Mongo populated object has _id. Here User object doesn't have id in attributes above.
-      // But listing.companyId (FK) is just the ID.
-      // We set l.companyId to l.User. 
-      // Warning: If we overwrite l.companyId (int) with l.User (obj), we lose the ID if not in User obj.
-      // User attributes above: companyName, email, phone. No ID.
-      // We should add displayId or id to User attributes?
-      // Let's add 'id' to User attributes.
+      // If User exists, attach it as companyId with _id
+      if (l.User) {
+        l.companyId = { ...l.User, _id: l.User.id };
+      }
       return l;
     });
 
-    res.json(formattedListings);
+    // Frontend expects { success: true, count: ..., listings: ... } structure for this filtered route?
+    // Based on adminRoutes.js inline code, it returned { success: true, count: ..., listings }.
+    // But this function was originally returning just array in adminController.js.
+    // Let's check how the frontend calls it. 
+    // Usually Admin Dashboard expects: { success: true, count: ..., listings: [] } or just []?
+    // Looking at previous adminRoutes logic (Step 274, line 45): res.json({ success: true, count: ..., listings })
+    // So we should match that format since we are replacing that route.
+
+    res.json({
+      success: true,
+      count: formattedListings.length,
+      listings: formattedListings
+    });
   } catch (error) {
     console.error("Error fetching listings:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // 🟩 Approve listing
 export const approveListing = async (req, res) => {
@@ -316,5 +332,108 @@ export const deactivateUser = async (req, res) => {
   } catch (error) {
     console.error("❌ Deactivate user error:", error);
     res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// 🟩 Delete Listing
+export const deleteListing = async (req, res) => {
+  try {
+    const listing = await Listing.findByPk(req.params.id, {
+      include: [{ model: User, attributes: ['email', 'companyName'] }]
+    });
+
+    if (!listing) {
+      return res.status(404).json({ message: "Listing not found" });
+    }
+
+    const companyEmail = listing.User?.email;
+    const companyName = listing.User?.companyName || "Company";
+    const listingTitle = listing.title;
+
+    await listing.destroy();
+
+    if (companyEmail) {
+      await sendEmail(
+        companyEmail,
+        "Listing Removed from Platform",
+        `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+        <h2>Dear ${companyName},</h2>
+        <p>We wanted to inform you that your listing titled 
+        <strong>"${listingTitle}"</strong> has been removed from our platform.</p>
+
+        <p>If you believe this is a mistake or want clarification, 
+        please contact our support team.</p>
+
+        <p style="margin-top:20px;">Best Regards,<br/>Admin Team</p>
+        </div>
+        `
+      );
+    }
+
+    res.json({ message: "Listing deleted and email sent successfully" });
+  } catch (error) {
+    console.error("❌ Error deleting listing:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// 🟩 Delete Company
+export const deleteCompany = async (req, res) => {
+  try {
+    const company = await User.findByPk(req.params.id);
+    if (!company) return res.status(404).json({ message: "Company not found" });
+
+    // Delete all listings by this company first
+    await Listing.destroy({ where: { companyId: company.id } });
+
+    // Delete the company
+    await company.destroy();
+
+    res.json({ message: "Company and its listings deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting company:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// 🟩 Get Monthly Stats
+export const getMonthlyStats = async (req, res) => {
+  try {
+    // Determine year to filter? Or just all time? 
+    // The previous aggregation grouped by month index ($month), implying all years mixed or just assuming reasonable data spread.
+    // Let's fetch all relevant fields and process in JS for safety/simplicity with Sequelize.
+    const listings = await Listing.findAll({
+      attributes: ['createdAt', 'status']
+    });
+
+    const months = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+
+    // Initialize stats bucket
+    const stats = new Array(12).fill(0).map((_, i) => ({
+      month: months[i],
+      listings: 0,
+      approved: 0,
+      rejected: 0
+    }));
+
+    listings.forEach(l => {
+      const date = new Date(l.createdAt);
+      const monthIndex = date.getMonth(); // 0-11
+
+      if (monthIndex >= 0 && monthIndex < 12) {
+        stats[monthIndex].listings++;
+        if (l.status === 'approved') stats[monthIndex].approved++;
+        if (l.status === 'rejected') stats[monthIndex].rejected++;
+      }
+    });
+
+    res.json(stats);
+  } catch (error) {
+    console.error("Error fetching monthly stats:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
