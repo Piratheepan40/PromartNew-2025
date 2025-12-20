@@ -3,9 +3,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import {
@@ -15,7 +12,6 @@ import {
   Users,
   CheckCircle,
   ArrowRight,
-  MessageSquare,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -258,75 +254,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-24 bg-slate-50">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="mb-16 text-center"
-          >
-            <h2
-              className="mb-4 text-4xl font-bold text-slate-800"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              Trusted by Industry Leaders
-            </h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Hear from businesses transforming their growth with ProMart.
-            </p>
-          </motion.div>
 
-          <div className="grid gap-8 md:grid-cols-3">
-            {[
-              {
-                name: "Sarah Johnson",
-                company: "TechFlow Solutions",
-                quote:
-                  "ProMart helped us connect with quality clients. We’ve seen a 40% increase in qualified leads within the first month.",
-              },
-              {
-                name: "Michael Chen",
-                company: "Global Logistics Co",
-                quote:
-                  "The verification process gives us instant credibility. Clients trust us more knowing we’re ProMart-verified.",
-              },
-              {
-                name: "Emily Rodriguez",
-                company: "Creative Design Studio",
-                quote:
-                  "Best B2B platform we’ve used. Intuitive, elegant, and backed by exceptional support.",
-              },
-            ].map((testimonial, index) => (
-              <motion.div
-                key={testimonial.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="h-full rounded-2xl border-0 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-4">
-                    <MessageSquare className="mb-3 h-6 w-6 text-amber-500" />
-                    <CardDescription className="text-base italic text-slate-700">
-                      “{testimonial.quote}”
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="font-semibold text-slate-800">
-                      {testimonial.name}
-                    </p>
-                    <p className="text-sm text-amber-600">
-                      {testimonial.company}
-                    </p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* CTA */}
       <section className="py-24 bg-gradient-to-r from-slate-900 to-slate-800 text-white mb-5">

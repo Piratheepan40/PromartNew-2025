@@ -1,10 +1,20 @@
-import mongoose from "mongoose";
+import { DataTypes, Model } from "sequelize";
+import { sequelize } from "../config/db.js";
 
-const otpSchema = new mongoose.Schema({
-  email: { type: String, required: true },
-  code: { type: String, required: true },
-  expiresAt: { type: Date, required: true },
-});
+class OTP extends Model { }
 
-const OTP = mongoose.model("OTP", otpSchema);
+OTP.init(
+  {
+    email: { type: DataTypes.STRING, allowNull: false },
+    code: { type: DataTypes.STRING, allowNull: false },
+    expiresAt: { type: DataTypes.DATE, allowNull: false },
+  },
+  {
+    sequelize,
+    modelName: "OTP",
+    tableName: "otps",
+    timestamps: true,
+  }
+);
+
 export default OTP;

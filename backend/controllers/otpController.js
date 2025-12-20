@@ -10,7 +10,7 @@ export const sendEmailOTP = async (req, res) => {
   const code = generateOTP();
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 min expiry
 
-  await OTP.deleteMany({ email });
+  await OTP.destroy({ where: { email } });
   await OTP.create({ email, code, expiresAt });
 
   try {
@@ -27,10 +27,10 @@ export const sendEmailOTP = async (req, res) => {
 export const verifyEmailOTP = async (req, res) => {
   const { email, code } = req.body;
 
-  const otpRecord = await OTP.findOne({ email, code });
+  const otpRecord = await OTP.findOne({ where: { email, code } });
   if (!otpRecord) return res.status(400).json({ message: "Invalid OTP" });
   if (otpRecord.expiresAt < new Date()) return res.status(400).json({ message: "OTP expired" });
 
-  await OTP.deleteMany({ email }); // cleanup after success
+  await OTP.destroy({ where: { email } }); // cleanup after success
   res.json({ message: "OTP verified successfully" });
 };

@@ -3,9 +3,14 @@ import User from "../models/User.js";
 
 export const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select("-password");
+    const user = await User.findByPk(req.user.id, {
+      attributes: { exclude: ["password"] }
+    });
     if (!user) return res.status(404).json({ message: "User not found" });
-    res.json(user);
+
+    const userJSON = user.toJSON();
+    userJSON._id = user.id;
+    res.json(userJSON);
   } catch (error) {
     console.error("Error fetching profile:", error);
     res.status(500).json({ message: "Server error" });
@@ -16,22 +21,22 @@ export const getProfile = async (req, res) => {
 // 🟩 Update profile (email, phone, companyName)
 export const updateProfile = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.id;
     const { email, phone, companyName } = req.body;
 
-    const user = await User.findById(userId);
+    const user = await User.findByPk(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
     if (email) user.email = email;
     if (phone) user.phone = phone;
-    if (companyName) user.companyName = companyName; 
+    if (companyName) user.companyName = companyName;
 
     await user.save();
 
     res.json({
       message: "Profile updated successfully",
       user: {
-        _id: user._id,
+        _id: user.id,
         email: user.email,
         phone: user.phone,
         companyName: user.companyName,
@@ -48,20 +53,20 @@ export const updateProfile = async (req, res) => {
 // 🟩 Change password
 export const changePassword = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.id;
     const { currentPassword, newPassword } = req.body;
 
-    const user = await User.findById(userId);
+    const user = await User.findByPk(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    const isMatch = await user.matchPassword(currentPassword);
     if (!isMatch)
       return res.status(400).json({ message: "Current password is incorrect" });
 
     if (newPassword.length < 8)
       return res.status(400).json({ message: "Password must be at least 8 characters" });
 
-    user.password = newPassword; // 🔹 Don't hash here — let pre-save hook do it
+    user.password = newPassword; // 🔹 Hook in User model will hash this
     user.passwordChangedAt = new Date();
     await user.save();
 

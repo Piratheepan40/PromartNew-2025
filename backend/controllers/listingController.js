@@ -6,51 +6,51 @@ import sendEmail from "../services/emailService.js";
 // 🟩 Create new listing (with file uploads)
 export const createListing = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
+    const user = await User.findByPk(req.user.id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
     // 🖼️ Handle uploaded files
     const attachments = req.files?.attachments
       ? req.files.attachments.map((file) => ({
-          name: file.originalname,
-          url: `${req.protocol}://${req.get("host")}/uploads/${file.filename}`,
-          type: file.mimetype,
-          size: file.size,
-          uploadedAt: new Date().toISOString(),
-        }))
+        name: file.originalname,
+        url: `${req.protocol}://${req.get("host")}/uploads/${file.filename}`,
+        type: file.mimetype,
+        size: file.size,
+        uploadedAt: new Date().toISOString(),
+      }))
       : [];
 
     const verificationDocuments = req.files?.verificationDocuments
       ? req.files.verificationDocuments.map((file) => ({
-          name: file.originalname,
-          url: `${req.protocol}://${req.get("host")}/uploads/${file.filename}`,
-          type: file.mimetype,
-          size: file.size,
-          uploadedAt: new Date().toISOString(),
-        }))
+        name: file.originalname,
+        url: `${req.protocol}://${req.get("host")}/uploads/${file.filename}`,
+        type: file.mimetype,
+        size: file.size,
+        uploadedAt: new Date().toISOString(),
+      }))
       : [];
 
     // 🏗️ Create new listing
     const listing = await Listing.create({
-      companyId: user._id,
+      companyId: user.id,
       companyName: user.companyName,
       email: user.email,
       phone: user.phone,
       ...req.body,
-      attachments,
+      attachments, // Sequelize JSON handles array
       verificationDocuments,
       status: "pending",
     });
 
     // 🔔 NOTIFY ADMIN: Create notification for all admins
-    const admins = await User.find({ role: "admin" });
-    
-    const adminNotificationPromises = admins.map(admin => 
+    const admins = await User.findAll({ where: { role: "admin" } });
+
+    const adminNotificationPromises = admins.map(admin =>
       Notification.create({
-        userId: admin._id,
+        userId: admin.id,
         type: "new_listing",
         message: `New listing "${listing.title}" submitted by ${user.companyName} for approval`,
-        listingId: listing._id,
+        listingId: listing.id,
         read: false
       })
     );
@@ -66,7 +66,11 @@ export const createListing = async (req, res) => {
 
     await Promise.all([...adminNotificationPromises, ...adminEmailPromises]);
 
-    res.status(201).json(listing);
+    // Return JSON with _id alias
+    const listingJSON = listing.toJSON();
+    listingJSON._id = listing.id;
+
+    res.status(201).json(listingJSON);
   } catch (err) {
     console.error("Error creating listing:", err);
     res.status(500).json({ message: "Server error" });
@@ -76,12 +80,22 @@ export const createListing = async (req, res) => {
 // 🟩 Get all approved listings (public)
 export const getApprovedListings = async (req, res) => {
   try {
-    const listings = await Listing.find({ status: "approved" }).populate(
-      "companyId",
-      "companyName email phone"
-    ); // ✅ include company info
+    const listings = await Listing.findAll({
+      where: { status: "approved" },
+      include: [{ model: User, attributes: ["companyName", "email", "phone"] }]
+    });
 
-    res.json(listings);
+    const formattedListings = listings.map(l => {
+      const json = l.toJSON();
+      json._id = l.id;
+      // Map user to companyId format (if frontend expects object)
+      if (json.User) {
+        json.companyId = { ...json.User, _id: l.companyId };
+      }
+      return json;
+    });
+
+    res.json(formattedListings);
   } catch (error) {
     console.error("Error fetching approved listings:", error);
     res.status(500).json({ message: "Server error" });
@@ -90,18 +104,23 @@ export const getApprovedListings = async (req, res) => {
 
 // 🟩 Get listings of logged-in company
 export const getCompanyListings = async (req, res) => {
-  const listings = await Listing.find({ companyId: req.user._id });
-  res.json(listings);
+  const listings = await Listing.findAll({ where: { companyId: req.user.id } });
+  const formattedListings = listings.map(l => {
+    const json = l.toJSON();
+    json._id = l.id;
+    return json;
+  });
+  res.json(formattedListings);
 };
 
 // ✅ Update Listing (company can edit) - FIXED VERSION
 export const updateListing = async (req, res) => {
   try {
-    const listing = await Listing.findById(req.params.id);
+    const listing = await Listing.findByPk(req.params.id);
     if (!listing) return res.status(404).json({ message: "Listing not found" });
 
     // 🧾 Only company who owns this listing can update it
-    if (listing.companyId.toString() !== req.user._id.toString()) {
+    if (listing.companyId !== req.user.id) {
       return res.status(403).json({ message: "Not authorized" });
     }
 
@@ -126,6 +145,7 @@ export const updateListing = async (req, res) => {
     } catch (parseError) {
       console.error("Error parsing existing files:", parseError);
       // Fallback to current listing files if parsing fails
+      // Note: listing.attachments is already JSON/array from Sequelize
       existingAttachments = listing.attachments || [];
       existingVerificationDocuments = listing.verificationDocuments || [];
     }
@@ -133,25 +153,29 @@ export const updateListing = async (req, res) => {
     // 🖼️ Handle new uploaded files with proper metadata
     const newAttachments = req.files?.attachments
       ? req.files.attachments.map((file) => ({
-          name: file.originalname,
-          url: `${req.protocol}://${req.get("host")}/uploads/${file.filename}`,
-          type: file.mimetype,
-          size: file.size,
-          uploadedAt: new Date().toISOString(),
-        }))
+        name: file.originalname,
+        url: `${req.protocol}://${req.get("host")}/uploads/${file.filename}`,
+        type: file.mimetype,
+        size: file.size,
+        uploadedAt: new Date().toISOString(),
+      }))
       : [];
 
     const newVerificationDocs = req.files?.verificationDocuments
       ? req.files.verificationDocuments.map((file) => ({
-          name: file.originalname,
-          url: `${req.protocol}://${req.get("host")}/uploads/${file.filename}`,
-          type: file.mimetype,
-          size: file.size,
-          uploadedAt: new Date().toISOString(),
-        }))
+        name: file.originalname,
+        url: `${req.protocol}://${req.get("host")}/uploads/${file.filename}`,
+        type: file.mimetype,
+        size: file.size,
+        uploadedAt: new Date().toISOString(),
+      }))
       : [];
 
     // ✅ Merge existing (with preserved metadata) + new files
+    // Ensure existing is array
+    if (!Array.isArray(existingAttachments)) existingAttachments = [];
+    if (!Array.isArray(existingVerificationDocuments)) existingVerificationDocuments = [];
+
     listing.attachments = [...existingAttachments, ...newAttachments];
     listing.verificationDocuments = [
       ...existingVerificationDocuments,
@@ -183,15 +207,15 @@ export const updateListing = async (req, res) => {
     await listing.save();
 
     // 🔔 NOTIFY ADMIN: Create notification for re-approval
-    const admins = await User.find({ role: "admin" });
-    const user = await User.findById(req.user._id);
-    
+    const admins = await User.findAll({ where: { role: "admin" } });
+    const user = await User.findByPk(req.user.id);
+
     const reapprovalNotificationPromises = admins.map(admin =>
       Notification.create({
-        userId: admin._id,
+        userId: admin.id,
         type: "re_approval",
         message: `Listing "${listing.title}" updated by ${user.companyName} and requires re-approval`,
-        listingId: listing._id,
+        listingId: listing.id,
         read: false
       })
     );
@@ -207,9 +231,12 @@ export const updateListing = async (req, res) => {
 
     await Promise.all([...reapprovalNotificationPromises, ...reapprovalEmailPromises]);
 
+    const listingJSON = listing.toJSON();
+    listingJSON._id = listing.id;
+
     res.json({
       message: "Listing updated and pending admin approval",
-      listing,
+      listing: listingJSON,
     });
   } catch (error) {
     console.error("Error updating listing:", error);

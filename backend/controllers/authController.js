@@ -1,4 +1,4 @@
-import User from "../models/user.js";
+import User from "../models/User.js";
 import { generateToken } from "../utils/jwt.js";
 
 export const registerUser = async (req, res) => {
@@ -6,7 +6,7 @@ export const registerUser = async (req, res) => {
     const { companyName, email, phone, password, role } = req.body; // ✅ added phone
 
     // Check existing user
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ where: { email } });
     if (existingUser)
       return res.status(400).json({ message: "User already exists" });
 
@@ -22,14 +22,14 @@ export const registerUser = async (req, res) => {
 
     // Return response
     res.status(201).json({
-      _id: user._id,
+      _id: user.id, // Keeping _id alias for frontend compatibility
       companyName: user.companyName,
       email: user.email,
       phone: user.phone,
       role: user.role,
-      createdAt: user.createdAt,   
+      createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-      token: generateToken({ id: user._id, role: user.role }),
+      token: generateToken({ id: user.id, role: user.role }),
     });
   } catch (error) {
     console.error("Registration error:", error);
@@ -41,7 +41,7 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ where: { email } });
   if (!user) return res.status(400).json({ message: "User not found" });
 
   const isMatch = await user.matchPassword(password);
@@ -53,20 +53,20 @@ export const loginUser = async (req, res) => {
     await user.save();
   }
   if (!user.isActive) {
-  return res.status(403).json({
-    success: false,
-    message: "Your account has been deactivated. Please contact support.",
-  });
-}
+    return res.status(403).json({
+      success: false,
+      message: "Your account has been deactivated. Please contact support.",
+    });
+  }
 
 
   res.json({
-    _id: user._id,
+    _id: user.id, // Keeping _id alias for frontend compatibility
     companyName: user.companyName,
     email: user.email,
     phone: user.phone,
     role: user.role,
     createdAt: user.createdAt,
-    token: generateToken({ id: user._id, role: user.role }),
+    token: generateToken({ id: user.id, role: user.role }),
   });
 };

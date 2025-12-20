@@ -1,12 +1,15 @@
 // controllers/notificationController.js
 import Notification from "../models/Notification.js";
+import Listing from "../models/Listing.js";
 
 // 🟩 Get user notifications
 export const getNotifications = async (req, res) => {
   try {
-    const notifications = await Notification.find({ userId: req.user._id })
-      .populate("listingId", "title")
-      .sort({ createdAt: -1 });
+    const notifications = await Notification.findAll({
+      where: { userId: req.user.id },
+      include: [{ model: Listing, attributes: ["title"] }],
+      order: [["createdAt", "DESC"]]
+    });
 
     res.json(notifications);
   } catch (error) {
@@ -18,15 +21,16 @@ export const getNotifications = async (req, res) => {
 // 🟩 Mark notification as read
 export const markAsRead = async (req, res) => {
   try {
-    const notification = await Notification.findOneAndUpdate(
-      { _id: req.params.id, userId: req.user._id },
+    const [updated] = await Notification.update(
       { read: true },
-      { new: true }
+      { where: { id: req.params.id, userId: req.user.id } }
     );
 
-    if (!notification) {
+    if (updated === 0) {
       return res.status(404).json({ message: "Notification not found" });
     }
+
+    const notification = await Notification.findByPk(req.params.id);
 
     res.json(notification);
   } catch (error) {
@@ -38,9 +42,9 @@ export const markAsRead = async (req, res) => {
 // 🟩 Mark all notifications as read
 export const markAllAsRead = async (req, res) => {
   try {
-    await Notification.updateMany(
-      { userId: req.user._id, read: false },
-      { read: true }
+    await Notification.update(
+      { read: true },
+      { where: { userId: req.user.id, read: false } }
     );
 
     res.json({ message: "All notifications marked as read" });
@@ -53,12 +57,14 @@ export const markAllAsRead = async (req, res) => {
 // 🟩 Delete notification
 export const deleteNotification = async (req, res) => {
   try {
-    const notification = await Notification.findOneAndDelete({
-      _id: req.params.id,
-      userId: req.user._id
+    const deleted = await Notification.destroy({
+      where: {
+        id: req.params.id,
+        userId: req.user.id
+      }
     });
 
-    if (!notification) {
+    if (deleted === 0) {
       return res.status(404).json({ message: "Notification not found" });
     }
 

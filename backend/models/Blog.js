@@ -1,19 +1,25 @@
-// models/Blog.js
-import mongoose from "mongoose";
+import { DataTypes, Model } from "sequelize";
+import { sequelize } from "../config/db.js";
 
-const blogSchema = new mongoose.Schema(
+class Blog extends Model { }
+
+Blog.init(
   {
-    title: { type: String, required: true },
-    excerpt: { type: String, required: true },
-    content: { type: String, required: true },
-    author: { type: String, required: true },
-    readTime: { type: String, required: true },
-    category: { type: String, required: true },
-    image: { type: String, default: "" },
-    date: { type: Date, default: Date.now },
+    title: { type: DataTypes.STRING, allowNull: false },
+    excerpt: { type: DataTypes.TEXT, allowNull: false },
+    content: { type: DataTypes.TEXT, allowNull: false },
+    author: { type: DataTypes.STRING, allowNull: false },
+    readTime: { type: DataTypes.STRING, allowNull: false },
+    category: { type: DataTypes.STRING, allowNull: false },
+    image: { type: DataTypes.STRING, defaultValue: "" },
+    date: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
   },
-  { timestamps: true }
+  {
+    sequelize,
+    modelName: "Blog",
+    tableName: "blogs",
+    timestamps: true,
+  }
 );
 
-const Blog = mongoose.models.Blog || mongoose.model("Blog", blogSchema);
 export default Blog;

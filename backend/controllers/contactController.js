@@ -37,7 +37,9 @@ export const createContact = async (req, res) => {
 // 🟩 Get all contact messages (for admin)
 export const getContacts = async (req, res) => {
   try {
-    const contacts = await Contact.find().sort({ createdAt: -1 });
+    const contacts = await Contact.findAll({
+      order: [["createdAt", "DESC"]]
+    });
     res.json({ success: true, contacts });
   } catch (error) {
     console.error("Error fetching contacts:", error);
@@ -48,8 +50,8 @@ export const getContacts = async (req, res) => {
 export const deleteContact = async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = await Contact.findByIdAndDelete(id);
-    if (!deleted)
+    const deleted = await Contact.destroy({ where: { id } });
+    if (deleted === 0)
       return res.status(404).json({ success: false, message: "Message not found" });
 
     res.json({ success: true, message: "Message deleted" });
@@ -69,17 +71,18 @@ export const updateContactStatus = async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid status value" });
     }
 
-    const updated = await Contact.findByIdAndUpdate(
-      id,
+    const [updated] = await Contact.update(
       { status },
-      { new: true }
+      { where: { id } }
     );
 
-    if (!updated) {
+    if (updated === 0) {
       return res.status(404).json({ success: false, message: "Contact not found" });
     }
 
-    res.json({ success: true, message: "Status updated", contact: updated });
+    const contact = await Contact.findByPk(id);
+
+    res.json({ success: true, message: "Status updated", contact });
   } catch (error) {
     console.error("❌ Update status error:", error);
     res.status(500).json({ success: false, message: "Server error" });

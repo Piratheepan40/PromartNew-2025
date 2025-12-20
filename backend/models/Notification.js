@@ -1,33 +1,52 @@
-// models/Notification.js
-import mongoose from "mongoose";
+import { DataTypes, Model } from "sequelize";
+import { sequelize } from "../config/db.js";
+import User from "./User.js";
+import Listing from "./Listing.js";
 
-const notificationSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true
+class Notification extends Model { }
+
+Notification.init(
+  {
+    type: {
+      type: DataTypes.ENUM("new_listing", "status_update", "re_approval"),
+      allowNull: false,
+    },
+    message: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    read: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: User,
+        key: "id",
+      },
+    },
+    listingId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: Listing,
+        key: "id",
+      },
+      allowNull: true
+    }
   },
-  type: {
-    type: String,
-    enum: ["new_listing", "status_update", "re_approval"],
-    required: true
-  },
-  message: {
-    type: String,
-    required: true
-  },
-  listingId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Listing"
-  },
-  read: {
-    type: Boolean,
-    default: false
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  {
+    sequelize,
+    modelName: "Notification",
+    tableName: "notifications",
+    timestamps: true,
   }
-});
+);
 
-export default mongoose.model("Notification", notificationSchema);
+User.hasMany(Notification, { foreignKey: "userId" });
+Notification.belongsTo(User, { foreignKey: "userId" });
+
+Listing.hasMany(Notification, { foreignKey: "listingId" });
+Notification.belongsTo(Listing, { foreignKey: "listingId" });
+
+export default Notification;

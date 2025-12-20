@@ -3,15 +3,14 @@ import Blog from "../models/Blog.js";
 
 export const createBlog = async (req, res) => {
   try {
-    const { title, excerpt, content, author,category, readTime, image } = req.body;
+    const { title, excerpt, content, author, category, readTime, image } = req.body;
 
     if (!title || !excerpt || !content || !author || !readTime || !category) {
       return res.status(400).json({ message: "All required fields must be filled" });
     }
 
-    const blog = new Blog({ title, excerpt, content, author, readTime,category, image });
-    const saved = await blog.save();
-    res.status(201).json(saved);
+    const blog = await Blog.create({ title, excerpt, content, author, readTime, category, image });
+    res.status(201).json(blog);
   } catch (error) {
     console.error("Error creating blog:", error);
     res.status(500).json({ message: "Server error creating blog" });
@@ -24,7 +23,10 @@ export const getBlogs = async (req, res) => {
   try {
     const { category } = req.query;
     const filter = category && category !== "All" ? { category } : {};
-    const blogs = await Blog.find(filter).sort({ createdAt: -1 });
+    const blogs = await Blog.findAll({
+      where: filter,
+      order: [["createdAt", "DESC"]]
+    });
     res.json(blogs);
   } catch (error) {
     res.status(500).json({ message: "Error fetching blogs", error });
@@ -34,7 +36,7 @@ export const getBlogs = async (req, res) => {
 // 🔍 Get single blog by ID
 export const getBlogById = async (req, res) => {
   try {
-    const blog = await Blog.findById(req.params.id);
+    const blog = await Blog.findByPk(req.params.id);
     if (!blog) return res.status(404).json({ message: "Blog not found" });
     res.json(blog);
   } catch (error) {
@@ -45,8 +47,10 @@ export const getBlogById = async (req, res) => {
 // ✏️ Update blog
 export const updateBlog = async (req, res) => {
   try {
-    const blog = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!blog) return res.status(404).json({ message: "Blog not found" });
+    const [updated] = await Blog.update(req.body, { where: { id: req.params.id } });
+    if (updated === 0) return res.status(404).json({ message: "Blog not found" });
+
+    const blog = await Blog.findByPk(req.params.id);
     res.json({ message: "Blog updated", blog });
   } catch (error) {
     res.status(500).json({ message: "Error updating blog", error });
@@ -56,8 +60,8 @@ export const updateBlog = async (req, res) => {
 // ❌ Delete blog
 export const deleteBlog = async (req, res) => {
   try {
-    const blog = await Blog.findByIdAndDelete(req.params.id);
-    if (!blog) return res.status(404).json({ message: "Blog not found" });
+    const deleted = await Blog.destroy({ where: { id: req.params.id } });
+    if (deleted === 0) return res.status(404).json({ message: "Blog not found" });
     res.json({ message: "Blog deleted" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting blog", error });

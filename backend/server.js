@@ -5,18 +5,17 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
-import connectDB from "./config/db.js";
 import { notFound, errorHandler } from "./middlewares/errorMiddleware.js";
 
 // Routes
- import authRoutes from "./routes/authRoutes.js";
- import otpRoutes from "./routes/otpRoutes.js";
- import adminRoutes from "./routes/adminRoutes.js";
- import companyRoutes from "./routes/companyRoutes.js"; 
- import blogRoutes from "./routes/blogRoutes.js";
- import listingRoutes from "./routes/listingRoutes.js";
- import notificationRoutes from "./routes/notificationRoutes.js";
- import contactRoutes from "./routes/contactRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import otpRoutes from "./routes/otpRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import companyRoutes from "./routes/companyRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
+import listingRoutes from "./routes/listingRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js";
 
 dotenv.config();
 
@@ -24,8 +23,15 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || "development";
 
-// Connect MongoDB
-connectDB(process.env.MONGO_URI);
+// Connect Database
+import { connectDB, sequelize } from "./config/db.js";
+
+connectDB();
+
+// Sync Sequelize Models
+sequelize.sync({ alter: false }).then(() => {
+  console.log("✅ MySQL Database Synced");
+});
 
 // Middlewares
 app.use(helmet());
@@ -55,14 +61,14 @@ app.use(
 
 
 // API Routes
- app.use("/api/auth", authRoutes);
- app.use("/api/otp", otpRoutes);
- app.use("/api/admin", adminRoutes);
- app.use("/api/companies", companyRoutes);
- app.use("/api/blogs", blogRoutes);
- app.use("/api/listings", listingRoutes);
- app.use("/api/notifications", notificationRoutes);
- app.use("/api/contact", contactRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/otp", otpRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/companies", companyRoutes);
+app.use("/api/blogs", blogRoutes);
+app.use("/api/listings", listingRoutes);
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/contact", contactRoutes);
 
 // Production Frontend Serve (optional if deploying full MERN)
 if (NODE_ENV === "production") {
@@ -73,7 +79,7 @@ if (NODE_ENV === "production") {
 }
 
 app.get("/", (req, res) => {
-  res.send("✅ Backend server running & connected to MongoDB!");
+  res.send("✅ Backend server running & connected to MySQL!");
 });
 
 // Error handlers
