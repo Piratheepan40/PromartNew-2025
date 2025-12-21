@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { FileText, Megaphone, Plus, Clock, AlertCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import mockApi from "@/services/mockApi";
+
 import CreateListingModal from "./CreateListingModal";
 import ListingCard from "./ListingCard";
 import { getMyListings } from "@/services/listingService";
@@ -109,7 +109,7 @@ const DashboardHome = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {stats.map((stat, index) => {
           const IconComponent = stat.icon;
           return (
@@ -196,7 +196,7 @@ const DashboardHome = () => {
                 whileHover={{ y: -2 }}
                 className="transition-transform duration-200"
               >
-                <ListingCard listing={listing} />
+                <ListingCard listing={listing} onUpdated={loadData} />
               </motion.div>
             ))}
           </div>

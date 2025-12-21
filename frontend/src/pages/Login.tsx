@@ -30,39 +30,39 @@ const Login = () => {
       .catch(() => console.log('Animation loading failed'));
   }, []);
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
- try {
-  const response = await loginUser({ email, password });
-  // Backend returns the full user object directly, not nested
-  const user = response;
+    try {
+      const response = await loginUser({ email, password });
+      // Backend returns the full user object directly, not nested
+      const user = response;
 
-  // Save user + token
-  login(user);
+      // Save user + token
+      login(user);
 
-  toast({
-    title: 'Welcome back!',
-    description: 'Successfully logged in',
-  });
+      toast({
+        title: 'Welcome back!',
+        description: 'Successfully logged in',
+      });
 
-  navigate(user.role === 'admin' ? '/admin' : '/dashboard');
-} catch (error: any) {
-  toast({
-    title: 'Login failed',
-    description: error.response?.data?.message || 'Something went wrong',
-    variant: 'destructive',
-  });
-}
- finally {
-    setLoading(false);
-  }
-};
+      navigate(user.role === 'admin' ? '/admin' : '/dashboard');
+    } catch (error: any) {
+      toast({
+        title: 'Login failed',
+        description: error.response?.data?.message || 'Something went wrong',
+        variant: 'destructive',
+      });
+    }
+    finally {
+      setLoading(false);
+    }
+  };
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-background to-amber-50/20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-background to-amber-50/20 dark:from-slate-950 dark:via-background dark:to-amber-950/20">
       {/* Header */}
       <Navbar />
 
@@ -81,13 +81,13 @@ const Login = () => {
                 </div>
               )}
               <div className="mt-8 text-left">
-                <h1 
-                  className="mb-4 text-4xl font-bold text-slate-800"
+                <h1
+                  className="mb-4 text-4xl font-bold text-foreground"
                   style={{ fontFamily: "'Playfair Display', serif" }}
                 >
                   Welcome Back to ProMart
                 </h1>
-                <p className="text-lg text-slate-600">
+                <p className="text-lg text-muted-foreground">
                   Continue your journey with the premier B2B marketplace for construction and engineering professionals.
                 </p>
               </div>
@@ -100,10 +100,10 @@ const Login = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="w-full order-2 lg:order-2"
           >
-            <Card className="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm p-6 lg:p-8 shadow-lg">
+            <Card className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6 lg:p-8 shadow-lg">
               <div className="mb-6 lg:mb-8 text-center">
-                <h1 className="mb-2 text-2xl lg:text-3xl font-bold text-slate-800">Welcome Back</h1>
-                <p className="text-slate-600">Sign in to your account</p>
+                <h1 className="mb-2 text-2xl lg:text-3xl font-bold text-foreground">Welcome Back</h1>
+                <p className="text-muted-foreground">Sign in to your account</p>
               </div>
 
               {/* Mobile Animation - ONLY SHOWS ON MOBILE, ABOVE THE FORM */}
@@ -119,13 +119,13 @@ const Login = () => {
                     </div>
                   )}
                   <div>
-                    <h2 
-                      className="mb-2 text-xl font-bold text-slate-800"
+                    <h2
+                      className="mb-2 text-xl font-bold text-foreground"
                       style={{ fontFamily: "'Playfair Display', serif" }}
                     >
                       Welcome Back
                     </h2>
-                    <p className="text-sm text-slate-600">
+                    <p className="text-sm text-muted-foreground">
                       Continue your journey with ProMart
                     </p>
                   </div>
@@ -134,9 +134,9 @@ const Login = () => {
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-slate-800">Email</Label>
+                  <Label htmlFor="email" className="text-foreground">Email</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+                    <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="email"
                       type="email"
@@ -144,15 +144,15 @@ const Login = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       placeholder="you@company.com"
-                      className="pl-10 border-slate-300 focus:border-amber-500 focus:ring-amber-500"
+                      className="pl-10 border-input bg-background focus:border-amber-500 focus:ring-amber-500"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-slate-800">Password</Label>
+                  <Label htmlFor="password" className="text-foreground">Password</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+                    <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="password"
                       type="password"
@@ -160,13 +160,13 @@ const Login = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       placeholder="••••••••"
-                      className="pl-10 border-slate-300 focus:border-amber-500 focus:ring-amber-500"
+                      className="pl-10 border-input bg-background focus:border-amber-500 focus:ring-amber-500"
                     />
                   </div>
                 </div>
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group"
                   disabled={loading}
                   size="lg"
@@ -183,10 +183,10 @@ const Login = () => {
               </form>
 
               <div className="mt-6 text-center">
-                <p className="text-slate-600">
+                <p className="text-muted-foreground">
                   Don't have an account?{' '}
-                  <Link 
-                    to="/register" 
+                  <Link
+                    to="/register"
                     className="font-semibold text-amber-600 hover:text-amber-700 hover:underline transition-colors"
                   >
                     Create account
@@ -194,7 +194,7 @@ const Login = () => {
                 </p>
               </div>
 
-             
+
             </Card>
           </motion.div>
         </div>

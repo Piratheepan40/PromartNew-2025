@@ -11,7 +11,7 @@ Blog.init(
     author: { type: DataTypes.STRING, allowNull: false },
     readTime: { type: DataTypes.STRING, allowNull: false },
     category: { type: DataTypes.STRING, allowNull: false },
-    image: { type: DataTypes.STRING, defaultValue: "" },
+    image: { type: DataTypes.TEXT, defaultValue: "" },
     date: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
   },
   {

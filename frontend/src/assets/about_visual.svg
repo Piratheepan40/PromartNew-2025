@@ -1,0 +1,24 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="800" height="600" fill="#0F172A"/>
+<circle cx="400" cy="300" r="200" fill="url(#paint0_radial_fallback)" fill-opacity="0.1"/>
+<path d="M400 200L500 250V350L400 400L300 350V250L400 200Z" stroke="#F59E0B" stroke-width="4"/>
+<path d="M400 200V400" stroke="#F59E0B" stroke-width="2" stroke-opacity="0.5"/>
+<path d="M300 250L500 250" stroke="#F59E0B" stroke-width="2" stroke-opacity="0.5"/>
+<path d="M300 350L500 350" stroke="#F59E0B" stroke-width="2" stroke-opacity="0.5"/>
+<circle cx="400" cy="200" r="6" fill="#F59E0B"/>
+<circle cx="500" cy="250" r="6" fill="#F59E0B"/>
+<circle cx="500" cy="350" r="6" fill="#F59E0B"/>
+<circle cx="400" cy="400" r="6" fill="#F59E0B"/>
+<circle cx="300" cy="350" r="6" fill="#F59E0B"/>
+<circle cx="300" cy="250" r="6" fill="#F59E0B"/>
+<path d="M550 300C550 382.843 482.843 450 400 450C317.157 450 250 382.843 250 300C250 217.157 317.157 150 400 150C482.843 150 550 217.157 550 300Z" stroke="#3B82F6" stroke-width="2" stroke-dasharray="8 8"/>
+<circle cx="530" cy="375" r="4" fill="#3B82F6"/>
+<circle cx="270" cy="225" r="4" fill="#3B82F6"/>
+<defs>
+<radialGradient id="paint0_radial_fallback" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(400 300) rotate(90) scale(300)">
+<stop stop-color="#F59E0B"/>
+<stop offset="1" stop-color="#F59E0B" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<text x="400" y="550" text-anchor="middle" fill="#94A3B8" font-family="sans-serif" font-size="24">ProMart Connection</text>
+</svg>

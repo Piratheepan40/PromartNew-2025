@@ -4,8 +4,7 @@ import Groq from "groq-sdk";
 dotenv.config();
 
 async function testGroq() {
-    const key = process.env.GROQ_API_KEY;
-
+    const key = process.env.GROQ_API_KEY;  // ONLY env variable, no fallback
     console.log("-----------------------------------------");
     console.log("🔍 TESTING GROQ API KEY...");
 

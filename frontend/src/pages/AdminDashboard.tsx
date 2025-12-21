@@ -557,7 +557,7 @@ const AdminDashboard = () => {
                             color: "hsl(var(--success))",
                           },
                         }}
-                        className="h-[300px] w-full"
+                        className="h-[250px] sm:h-[300px] w-full"
                       >
                         <BarChart data={chartData}>
                           <CartesianGrid

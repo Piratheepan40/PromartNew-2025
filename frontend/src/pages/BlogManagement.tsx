@@ -22,7 +22,7 @@ import {
 } from "@/services/blogService";
 
 interface BlogPost {
-  _id: string;
+  id: string;
   title: string;
   excerpt: string;
   content: string;
@@ -54,9 +54,9 @@ const BlogManagement = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      if (currentPost._id) {
-        const updated = await updateBlog(currentPost._id, currentPost);
-        setPosts(posts.map((p) => (p._id === updated._id ? updated : p)));
+      if (currentPost.id) {
+        const updated = await updateBlog(currentPost.id, currentPost);
+        setPosts(posts.map((p) => (p.id === updated.id ? updated : p)));
         toast({ title: "Blog updated successfully" });
       } else {
         const newBlog = await createBlog(currentPost);
@@ -77,7 +77,7 @@ const BlogManagement = () => {
   const handleDelete = async (id: string) => {
     try {
       await deleteBlog(id);
-      setPosts(posts.filter((p) => p._id !== id));
+      setPosts(posts.filter((p) => p.id !== id));
       toast({ title: "Blog deleted successfully" });
     } catch {
       toast({ title: "Error deleting blog", variant: "destructive" });
@@ -198,10 +198,22 @@ const BlogManagement = () => {
                 }
                 placeholder="https://example.com/image.jpg"
               />
+              {currentPost.image && (
+                <div className="mt-2 relative h-40 w-full overflow-hidden rounded-md border border-slate-200">
+                  <img
+                    src={currentPost.image}
+                    alt="Preview"
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800";
+                    }}
+                  />
+                </div>
+              )}
             </div>
             <div className="flex gap-3">
               <Button type="submit" className="flex-1">
-                {currentPost._id ? "Update" : "Create"} Post
+                {currentPost.id ? "Update" : "Create"} Post
               </Button>
               <Button
                 type="button"
@@ -221,7 +233,7 @@ const BlogManagement = () => {
         <div className="grid gap-4">
           {posts.map((post, index) => (
             <motion.div
-              key={post._id}
+              key={post.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -254,7 +266,7 @@ const BlogManagement = () => {
                       size="sm"
                       variant="outline"
                       className="border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                      onClick={() => handleDelete(post._id)}
+                      onClick={() => handleDelete(post.id)}
                     >
                       <Trash2 className="mr-2 h-4 w-4" />
                       Delete

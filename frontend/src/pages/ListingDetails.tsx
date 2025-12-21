@@ -1,34 +1,30 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { useParams, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import mockApi from "@/services/mockApi";
 import { Listing } from "@/types";
 import {
   Building2,
   Mail,
   Phone,
-  Calendar,
-  Tag,
-  FileText,
   ArrowLeft,
   MapPin,
   Globe,
   Users,
-  TrendingUp,
-  Award,
   CheckCircle2,
   Star,
   Download,
   Shield,
   ArrowRight,
+  Share2,
+  ChevronRight,
+  FileText,
+  Award,
+  Calendar
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
-import StatusBadge from "@/components/StatusBadge";
-import { formatDistanceToNow } from "date-fns";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
 import { getApprovedListings } from "@/services/listingService";
@@ -116,9 +112,9 @@ const ListingDetails = () => {
       <div className="min-h-screen bg-background">
         <Navbar />
         <div className="flex min-h-[60vh] items-center justify-center">
-          <div className="text-center">
-            <div className="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent"></div>
-            <p className="text-slate-600">Loading...</p>
+          <div className="flex flex-col items-center gap-4">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-amber-500 border-t-transparent"></div>
+            <p className="text-muted-foreground animate-pulse">Loading Listing...</p>
           </div>
         </div>
       </div>
@@ -130,15 +126,21 @@ const ListingDetails = () => {
       <div className="min-h-screen bg-background">
         <Navbar />
         <div className="flex min-h-[60vh] items-center justify-center">
-          <div className="text-center">
-            <h2 className="mb-4 text-2xl font-bold text-slate-800">
+          <div className="text-center max-w-md px-4">
+            <div className="mb-6 h-20 w-20 bg-muted rounded-full flex items-center justify-center mx-auto">
+              <FileText className="h-10 w-10 text-muted-foreground" />
+            </div>
+            <h2 className="mb-3 text-2xl font-bold text-foreground">
               Listing Not Found
             </h2>
+            <p className="text-muted-foreground mb-8">
+              The listing you are looking for might have been removed or is temporarily unavailable.
+            </p>
             <Button
               onClick={() => navigate("/listings")}
-              className="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold"
+              className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold"
             >
-              Browse Listings
+              <ArrowLeft className="mr-2 h-4 w-4" /> Browse All Listings
             </Button>
           </div>
         </div>
@@ -147,574 +149,306 @@ const ListingDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background selection:bg-amber-500/30">
       <Navbar />
 
-      {/* Hero Section */}
-      <div className="relative border-b bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
-        <div className="container mx-auto px-4 py-12 pb-40">
+      {/* 🔹 HERO SECTION - Immersive Header */}
+      <section className="relative w-full bg-slate-950 text-white pt-24 pb-32 lg:pb-40 overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 bg-slate-900">
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
+        </div>
+
+        <div className="container relative mx-auto px-4 z-10">
+          {/* Breadcrumbs */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            className="mb-8 flex items-center gap-2 text-sm text-slate-400"
           >
-            <Button
-              variant="ghost"
-              onClick={() => navigate(-1)}
-              className="mb-6 -ml-2 text-slate-300 hover:text-white hover:bg-white/10"
+            <span
+              className="hover:text-amber-500 cursor-pointer transition-colors"
+              onClick={() => navigate('/listings')}
             >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back
-            </Button>
-
-            <div className="flex flex-wrap items-start justify-between gap-6">
-              <div className="flex-1">
-                <div className="mb-4 flex flex-wrap items-center gap-3">
-                  <StatusBadge status={listing.status} />
-                  <Badge
-                    variant="secondary"
-                    className="bg-white/20 text-white border-0"
-                  >
-                    <Tag className="mr-1 h-3 w-3" />
-                    {listing.category}
-                  </Badge>
-                </div>
-
-                <h1
-                  className="mb-4 text-4xl font-bold tracking-tight lg:text-5xl"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
-                >
-                  {listing.title}
-                </h1>
-
-                <div className="flex items-center gap-2 text-slate-300">
-                  <Calendar className="h-4 w-4" />
-                  <span className="text-sm">
-                    Posted{" "}
-                    {formatDistanceToNow(new Date(listing.createdAt), {
-                      addSuffix: true,
-                    })}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen}>
-                  <DialogTrigger asChild>
-                    <Button
-                      size="lg"
-                      className="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group"
-                    >
-                      Contact Company
-                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[500px] border-slate-200 shadow-2xl">
-                    <DialogHeader>
-                      <DialogTitle className="text-2xl font-bold text-slate-800" style={{ fontFamily: "'Playfair Display', serif" }}>
-                        Contact {listing.companyName}
-                      </DialogTitle>
-                      <DialogDescription className="text-slate-600">
-                        Interested in this listing? Send a direct inquiry to the company.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={handleInquirySubmit} className="space-y-5 mt-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium text-slate-700">Name</label>
-                          <Input
-                            name="name"
-                            required
-                            placeholder="Your Name"
-                            value={inquiryForm.name}
-                            onChange={handleInquiryChange}
-                            className="border-slate-200 focus:border-amber-500"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium text-slate-700">Email</label>
-                          <Input
-                            name="email"
-                            type="email"
-                            required
-                            placeholder="your@email.com"
-                            value={inquiryForm.email}
-                            onChange={handleInquiryChange}
-                            className="border-slate-200 focus:border-amber-500"
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Phone (Optional)</label>
-                        <Input
-                          name="phone"
-                          placeholder="Your Phone Number"
-                          value={inquiryForm.phone}
-                          onChange={handleInquiryChange}
-                          className="border-slate-200 focus:border-amber-500"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Subject</label>
-                        <Input
-                          name="subject"
-                          placeholder={`Inquiry about ${listing.title}`}
-                          value={inquiryForm.subject}
-                          onChange={handleInquiryChange}
-                          className="border-slate-200 focus:border-amber-500"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Message</label>
-                        <Textarea
-                          name="message"
-                          required
-                          placeholder="Tell the company what you're interested in..."
-                          rows={4}
-                          value={inquiryForm.message}
-                          onChange={handleInquiryChange}
-                          className="border-slate-200 focus:border-amber-500 min-h-[100px]"
-                        />
-                      </div>
-                      <Button
-                        type="submit"
-                        disabled={submittingInquiry}
-                        className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-bold h-12 text-lg shadow-lg"
-                      >
-                        {submittingInquiry ? "Sending..." : "Send Inquiry"}
-                      </Button>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </div>
+              Listings
+            </span>
+            <ChevronRight className="h-4 w-4" />
+            <span className="text-amber-500 font-medium truncate max-w-[200px]">{listing?.category}</span>
           </motion.div>
-        </div>
 
-        {/* Wave divider */}
-        <div className="absolute -bottom-1 left-0 right-0">
-          <svg
-            viewBox="0 0 1440 120"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="text-background"
-          >
-            <path
-              d="M0 120L1440 120L1440 0C1440 0 1080 80 720 80C360 80 0 0 0 0L0 120Z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid gap-8 lg:grid-cols-3">
-          {/* Main Content */}
-          <div className="lg:col-span-2">
+          <div className="grid lg:grid-cols-3 gap-8 items-start">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="space-y-8"
+              transition={{ duration: 0.5 }}
+              className="lg:col-span-2"
             >
-              {/* Description */}
-              <Card className="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm p-8 shadow-lg">
-                <div className="mb-6 flex items-center gap-3">
-                  <div className="rounded-lg bg-amber-500/10 p-2">
-                    <FileText className="h-5 w-5 text-amber-500" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-slate-800">
-                    Description
-                  </h2>
-                </div>
-                <div className="prose prose-slate max-w-none">
-                  <p className="text-base leading-relaxed text-slate-600">
-                    {listing.description}
-                  </p>
-                </div>
-              </Card>
-
-              {/* Key Features */}
-              <Card className="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm p-8 shadow-lg">
-                <div className="mb-6 flex items-center gap-3">
-                  <div className="rounded-lg bg-amber-500/10 p-2">
-                    <Award className="h-5 w-5 text-amber-500" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-slate-800">
-                    Key Features
-                  </h2>
-                </div>
-
-                {(() => {
-                  let features: string[] = [];
-
-                  // Handle the specific format where keyFeatures is an array with one JSON string
-                  if (
-                    listing?.keyFeatures &&
-                    Array.isArray(listing.keyFeatures) &&
-                    listing.keyFeatures.length > 0
-                  ) {
-                    const firstItem = listing.keyFeatures[0];
-
-                    if (
-                      typeof firstItem === "string" &&
-                      firstItem.startsWith("[")
-                    ) {
-                      try {
-                        // Parse the JSON string array
-                        features = JSON.parse(firstItem);
-                      } catch (e) {
-                        console.error("Failed to parse keyFeatures:", e);
-                        // Fallback: try to extract features from the string
-                        features = firstItem
-                          .replace(/[\[\]"]/g, "")
-                          .split(",")
-                          .map((item) => item.trim());
-                      }
-                    } else if (Array.isArray(firstItem)) {
-                      // If it's already a nested array
-                      features = firstItem;
-                    } else if (typeof firstItem === "string") {
-                      // If it's a simple string, use it as a single feature
-                      features = [firstItem];
-                    }
-                  } else if (Array.isArray(listing?.keyFeatures)) {
-                    // If it's already a proper array
-                    features = listing.keyFeatures;
-                  }
-
-                  // Filter out any empty strings and ensure all items are strings
-                  features = features.filter(
-                    (feature) => feature && typeof feature === "string"
-                  );
-
-                  if (features.length === 0) {
-                    return (
-                      <p className="text-sm text-muted-foreground">
-                        No features listed yet.
-                      </p>
-                    );
-                  }
-
-                  return (
-                    <div className="grid gap-4 md:grid-cols-2">
-                      {features.map((feature, index) => (
-                        <motion.div
-                          key={index}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.1 + index * 0.03 }}
-                          className="flex items-center gap-3"
-                        >
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/10">
-                            <CheckCircle2 className="h-4 w-4 text-amber-500" />
-                          </div>
-                          <span className="font-medium text-slate-700">
-                            {feature}
-                          </span>
-                        </motion.div>
-                      ))}
-                    </div>
-                  );
-                })()}
-              </Card>
-
-              {/* Admin Feedback */}
-              {listing.adminComment && (
-                <Card className="rounded-2xl border-l-4 border-l-amber-500 bg-amber-50/50 p-8">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="rounded-lg bg-amber-500/10 p-2">
-                      <FileText className="h-5 w-5 text-amber-600" />
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-800">
-                      Admin Feedback
-                    </h3>
-                  </div>
-                  <p className="text-sm leading-relaxed text-slate-600">
-                    {listing.adminComment}
-                  </p>
-                </Card>
-              )}
-
-              {/* Attachments (Company Images Only) */}
-              {listing.attachments && listing.attachments.length > 0 && (
-                <Card className="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm p-8 shadow-lg">
-                  <div className="mb-6 flex items-center gap-3">
-                    <div className="rounded-lg bg-amber-500/10 p-2">
-                      <FileText className="h-5 w-5 text-amber-500" />
-                    </div>
-                    <h2 className="text-2xl font-bold text-slate-800">
-                      Company Images
-                    </h2>
-                  </div>
-
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {listing.attachments
-                      .filter(
-                        (file) =>
-                          file.url?.toLowerCase().endsWith(".jpg") ||
-                          file.url?.toLowerCase().endsWith(".jpeg") ||
-                          file.url?.toLowerCase().endsWith(".png")
-                      )
-                      .map((image, index) => (
-                        <motion.div
-                          key={index}
-                          className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md"
-                        >
-                          <img
-                            src={
-                              image?.url?.startsWith("http")
-                                ? image.url
-                                : `http://localhost:5000${image.url}`
-                            }
-                            alt={image.name || `Company Image ${index + 1}`}
-                            className="h-48 w-full object-cover"
-                          />
-                        </motion.div>
-                      ))}
-                  </div>
-                </Card>
-              )}
-
-              {/* Verification Documents (Admin Only) */}
-              {isAdmin &&
-                listing.verificationDocuments &&
-                listing.verificationDocuments.length > 0 && (
-                  <Card className="rounded-2xl border-2 border-amber-500/20 bg-white/80 backdrop-blur-sm p-8 shadow-lg">
-                    <div className="mb-6 flex items-center gap-3">
-                      <div className="rounded-lg bg-amber-500/10 p-2">
-                        <Shield className="h-5 w-5 text-amber-500" />
-                      </div>
-                      <div>
-                        <h2 className="text-2xl font-bold text-slate-800">
-                          Verification Documents
-                        </h2>
-                        <p className="text-sm text-slate-600">
-                          Admin-only view
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      {listing.verificationDocuments
-                        .filter((doc) =>
-                          doc.url?.toLowerCase().endsWith(".pdf")
-                        )
-                        .map((doc) => (
-                          <Card
-                            key={doc.id}
-                            className="rounded-xl border border-slate-200 p-4"
-                          >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/10">
-                                  <FileText className="h-5 w-5 text-amber-500" />
-                                </div>
-                                <div>
-                                  <p className="font-medium text-slate-800">
-                                    {doc.name}
-                                  </p>
-                                  <p className="text-xs text-slate-600">
-                                    {(doc.size / 1024).toFixed(2)} KB • Uploaded{" "}
-                                    {new Date(
-                                      doc.uploadedAt
-                                    ).toLocaleDateString()}
-                                  </p>
-                                </div>
-                              </div>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                asChild
-                                className="border-amber-500 text-amber-600 hover:bg-amber-50"
-                              >
-                                <a href={doc.url} download={doc.name}>
-                                  <Download className="mr-2 h-4 w-4" />
-                                  Download
-                                </a>
-                              </Button>
-                            </div>
-                          </Card>
-                        ))}
-                    </div>
-                  </Card>
+              <div className="flex items-center gap-3 mb-4">
+                <Badge className="bg-amber-500/20 text-amber-500 border-amber-500/30 hover:bg-amber-500/30">
+                  {listing.category}
+                </Badge>
+                {listing.status === 'approved' && (
+                  <Badge variant="outline" className="text-emerald-400 border-emerald-400/30 bg-emerald-400/10 gap-1">
+                    <CheckCircle2 className="w-3 h-3" /> Verified Listing
+                  </Badge>
                 )}
+              </div>
+
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight font-display">
+                {listing.title}
+              </h1>
+
+              <div className="flex flex-wrap items-center gap-6 text-slate-300 mb-8">
+                <div className="flex items-center gap-2">
+                  <Building2 className="w-5 h-5 text-amber-500" />
+                  <span className="font-medium text-white">{listing.companyName}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-slate-500" />
+                  <span>{listing.location || "Remote / Flexible"}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-5 h-5 text-slate-500" />
+                  <span>Posted {new Date(listing.createdAt || Date.now()).toLocaleDateString()}</span>
+                </div>
+              </div>
             </motion.div>
           </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              {/* Company Card */}
-              <Card className="rounded-2xl overflow-hidden border border-slate-200 bg-white/80 backdrop-blur-sm shadow-lg">
-                <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 text-white">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur">
-                      <Building2 className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-slate-300">Posted by</p>
-                      <h3 className="text-xl font-bold">
-                        {listing.companyName}
-                      </h3>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-6 p-6">
-                  <div>
-                    <h4 className="mb-4 font-semibold text-slate-800">
-                      Company Information
-                    </h4>
-                    <div className="space-y-3">
-                      <div className="flex items-start gap-3 text-sm">
-                        <Mail className="mt-0.5 h-4 w-4 text-slate-500" />
-                        <div>
-                          <p className="text-xs text-slate-500">Email</p>
-                          <p className="font-medium text-slate-700">
-                            {listing.companyId.email || "N/A"}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3 text-sm">
-                        <Phone className="mt-0.5 h-4 w-4 text-slate-500" />
-                        <div>
-                          <p className="text-xs text-slate-500">Phone</p>
-                          <p className="font-medium text-slate-700">
-                            {listing.companyId.phone || "N/A"}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3 text-sm">
-                        <MapPin className="mt-0.5 h-4 w-4 text-slate-500" />
-                        <div>
-                          <p className="text-xs text-slate-500">Location</p>
-                          <p className="font-medium text-slate-700">
-                            {listing.location}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3 text-sm">
-                        <Globe className="mt-0.5 h-4 w-4 text-slate-500" />
-                        <div>
-                          <p className="text-xs text-slate-500">Website</p>
-                          <Link
-                            to="#"
-                            className="font-medium text-amber-600 hover:text-amber-700 hover:underline"
-                          >
-                            {listing.website}
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Separator className="bg-slate-200" />
-
-                  <div>
-                    <h4 className="mb-4 font-semibold text-slate-800">
-                      Company Stats
-                    </h4>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="rounded-xl bg-amber-500/5 p-4 text-center">
-                        <div className="mb-1 flex items-center justify-center">
-                          <TrendingUp className="h-5 w-5 text-amber-500" />
-                        </div>
-                        <p className="text-2xl font-bold text-amber-500">3</p>
-                        <p className="text-xs text-slate-600">
-                          Active Listings
-                        </p>
-                      </div>
-                      <div className="rounded-xl bg-amber-500/5 p-4 text-center">
-                        <div className="mb-1 flex items-center justify-center">
-                          <Users className="h-5 w-5 text-amber-500" />
-                        </div>
-                        <p className="text-2xl font-bold text-amber-500">50+</p>
-                        <p className="text-xs text-slate-600">Clients Served</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Button
-                    className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group"
-                    size="lg"
-                    onClick={() => setIsContactModalOpen(true)}
-                  >
-                    Contact Company
-                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </div>
-              </Card>
-
-              {/* Trust Badges */}
-              <Card className="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm p-6 shadow-lg">
-                <h4 className="mb-4 font-semibold text-slate-800">
-                  Verified & Trusted
-                </h4>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 text-sm">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/10">
-                      <CheckCircle2 className="h-4 w-4 text-amber-500" />
-                    </div>
-                    <span className="font-medium text-slate-700">
-                      Admin Verified
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/10">
-                      <Award className="h-4 w-4 text-amber-500" />
-                    </div>
-                    <span className="font-medium text-slate-700">
-                      Premium Member
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/10">
-                      <Star className="h-4 w-4 text-amber-500" />
-                    </div>
-                    <span className="font-medium text-slate-700">
-                      5 Star Rating
-                    </span>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
-          </div>
-        </div>
-      </div>
-
-      {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-r from-slate-900 to-slate-800 text-white mb-5">
-        <div className="container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2
-              className="mb-4 text-3xl md:text-4xl font-bold"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              Ready to List Your Business?
-            </h2>
-            <p className="mb-10 text-lg text-slate-300 max-w-2xl mx-auto">
-              Join thousands of businesses already growing with ProMart.
-            </p>
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group"
-              onClick={() => navigate("/register")}
-            >
-              Get Started Today
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </motion.div>
         </div>
       </section>
+
+      {/* 🔹 MAIN CONTENT - Overlapping Design */}
+      <div className="container mx-auto px-4 -mt-20 relative z-20 pb-24">
+        <div className="grid lg:grid-cols-3 gap-8">
+
+          {/* LEFT COLUMN - CONTENT */}
+          <div className="lg:col-span-2 space-y-8">
+
+            {/* Key Features Card (Highlighted) */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Card className="rounded-2xl border-border shadow-lg overflow-hidden">
+                <div className="bg-gradient-to-r from-amber-500/10 to-transparent p-1 border-b border-amber-500/20">
+                  <div className="px-6 py-2 flex items-center gap-2">
+                    <Award className="w-5 h-5 text-amber-600" />
+                    <span className="font-bold text-amber-700 dark:text-amber-500 text-sm uppercase tracking-wide">Key Highlights</span>
+                  </div>
+                </div>
+                <div className="p-8 bg-card">
+                  {(() => {
+                    let features: string[] = [];
+                    if (listing?.keyFeatures && Array.isArray(listing.keyFeatures) && listing.keyFeatures.length > 0) {
+                      const firstItem = listing.keyFeatures[0];
+                      if (typeof firstItem === "string" && firstItem.startsWith("[")) {
+                        try { features = JSON.parse(firstItem); } catch (e) { features = [firstItem]; }
+                      } else if (Array.isArray(firstItem)) { features = firstItem; }
+                      else if (typeof firstItem === "string") { features = [firstItem]; }
+                    } else if (Array.isArray(listing?.keyFeatures)) { features = listing.keyFeatures; }
+
+                    features = features.filter((f) => f && typeof f === "string");
+
+                    if (features.length === 0) return <p className="text-muted-foreground">No specific features highlighted.</p>;
+
+                    return (
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {features.map((feature, idx) => (
+                          <div key={idx} className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                            <div className="h-6 w-6 mt-0.5 rounded-full bg-green-500/10 flex items-center justify-center shrink-0">
+                              <CheckCircle2 className="h-4 w-4 text-green-600" />
+                            </div>
+                            <span className="text-foreground font-medium">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
+                </div>
+              </Card>
+            </motion.div>
+
+            {/* Description Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <Card className="p-8 rounded-2xl border-border shadow-sm">
+                <h2 className="text-2xl font-bold font-display text-foreground mb-6 flex items-center gap-3">
+                  <FileText className="w-6 h-6 text-muted-foreground" />
+                  About this Listing
+                </h2>
+                <div className="prose prose-slate dark:prose-invert max-w-none">
+                  <p className="text-lg leading-relaxed text-muted-foreground whitespace-pre-line">
+                    {listing.description}
+                  </p>
+                  <p className="border-l-4 border-amber-500 pl-4 py-2 bg-amber-500/5 text-foreground italic mt-6 rounded-r-lg">
+                    "{listing.companyName} is committed to delivering excellence in {listing.category}."
+                  </p>
+                </div>
+              </Card>
+            </motion.div>
+
+            {/* Gallery (Placeholder) */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <Card className="p-8 rounded-2xl border-border shadow-sm">
+                <h2 className="text-2xl font-bold font-display text-foreground mb-6">Project Gallery</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="aspect-video rounded-xl bg-muted overflow-hidden group cursor-pointer relative">
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
+                      <img
+                        src={`https://source.unsplash.com/random/800x600?construction,building,${i}`}
+                        alt="Gallery"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                    </div>
+                  ))}
+                  {listing.attachments && listing.attachments.length > 0 && listing.attachments.map((att, i) => (
+                    <div key={`att-${i}`} className="aspect-video rounded-xl bg-muted overflow-hidden group cursor-pointer relative">
+                      <img src={att.url} alt={att.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </motion.div>
+
+            {/* Admin Verification (Conditional) */}
+            {isAdmin && listing.verificationDocuments && listing.verificationDocuments.length > 0 && (
+              <Card className="p-8 rounded-2xl border-2 border-amber-500/20 bg-amber-50/50 dark:bg-amber-950/10">
+                <div className="flex items-center gap-3 mb-6">
+                  <Shield className="w-6 h-6 text-amber-600" />
+                  <h3 className="text-xl font-bold text-foreground">Admin Verification Documents</h3>
+                </div>
+                <div className="space-y-3">
+                  {listing.verificationDocuments.map((doc) => (
+                    <div key={doc.id} className="flex items-center justify-between p-4 bg-background rounded-xl border border-border">
+                      <div className="flex items-center gap-3">
+                        <FileText className="w-5 h-5 text-muted-foreground" />
+                        <div>
+                          <p className="font-medium text-foreground">{doc.name}</p>
+                          <p className="text-xs text-muted-foreground">{(doc.size / 1024).toFixed(1)} KB • {new Date(doc.uploadedAt).toLocaleDateString()}</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm" asChild>
+                        <a href={doc.url} download>Download</a>
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+          </div>
+
+          {/* RIGHT COLUMN - SIDEBAR */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24 space-y-6">
+
+              {/* CTA Card (Replaces "Actions") */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <Card className="p-6 rounded-2xl border-border shadow-xl bg-card relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-600"></div>
+                  <h3 className="font-bold text-xl text-foreground mb-2">Interested?</h3>
+                  <p className="text-muted-foreground mb-6">Connect with {listing.companyName} directly to discuss your project.</p>
+
+                  <Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen}>
+                    <DialogTrigger asChild>
+                      <Button size="lg" className="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold h-12 text-lg shadow-lg hover:shadow-amber-500/25 transition-all mb-3">
+                        Contact Company <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle className="text-2xl font-bold">Contact {listing.companyName}</DialogTitle>
+                        <DialogDescription>Send a message directly to their team.</DialogDescription>
+                      </DialogHeader>
+                      <form onSubmit={handleInquirySubmit} className="space-y-4 mt-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">Name</label>
+                            <Input name="name" required value={inquiryForm.name} onChange={handleInquiryChange} />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">Email</label>
+                            <Input name="email" type="email" required value={inquiryForm.email} onChange={handleInquiryChange} />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Message</label>
+                          <Textarea name="message" required rows={4} value={inquiryForm.message} onChange={handleInquiryChange} placeholder="Describe your project..." />
+                        </div>
+                        <Button type="submit" disabled={submittingInquiry} className="w-full bg-amber-500 text-slate-950 font-bold">
+                          {submittingInquiry ? "Sending..." : "Send Message"}
+                        </Button>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
+
+                  <Button variant="outline" className="w-full border-slate-300 dark:border-slate-700 h-12">
+                    <Share2 className="w-4 h-4 mr-2" /> Share Listing
+                  </Button>
+                </Card>
+              </motion.div>
+
+              {/* Company Info Card */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 }}
+              >
+                <Card className="p-6 rounded-2xl border-border shadow-sm">
+                  <h3 className="font-bold text-foreground mb-4 pb-4 border-b border-border">Company Details</h3>
+                  <div className="space-y-5">
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                        <MapPin className="w-5 h-5 text-slate-500" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-foreground">Location</p>
+                        <p className="text-sm text-muted-foreground">{listing.location || "Headquarters: Colombo, LK"}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                        <Mail className="w-5 h-5 text-slate-500" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-foreground">Email</p>
+                        <p className="text-sm text-muted-foreground truncate max-w-[180px]">contact@{listing.companyName.toLowerCase().replace(/\s+/g, '')}.com</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                        <Globe className="w-5 h-5 text-slate-500" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-foreground">Website</p>
+                        <a href="#" className="text-sm text-amber-600 hover:underline">Visit Website</a>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+
+              {/* REMOVED: Verified & Trusted / Trust Score Card */}
+
+            </div>
+          </div>
+
+        </div>
+      </div>
 
       <Footer />
     </div>

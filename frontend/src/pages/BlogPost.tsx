@@ -15,7 +15,7 @@ const BlogPost = () => {
   const { toast } = useToast();
   const [post, setPost] = useState<any>(null);
   const [error, setError] = useState(false);
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [blogPosts, setBlogPosts] = useState<any[]>([]);
   useEffect(() => {
     const fetchPost = async () => {
@@ -32,12 +32,12 @@ const BlogPost = () => {
     fetchPost();
   }, [id]);
 
-   if (error) return <p>Blog not found</p>;
-   if (!post) return loading;
+  if (error) return <p>Blog not found</p>;
+  if (!post) return loading;
 
 
 
- 
+
 
   if (!post) {
     return (
@@ -82,8 +82,8 @@ const BlogPost = () => {
             animate={{ opacity: 1, y: 0 }}
           >
             <Link to="/blog">
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 className="mb-6 text-slate-300 hover:text-white hover:bg-white/10"
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
@@ -95,13 +95,13 @@ const BlogPost = () => {
               {post.category}
             </Badge>
 
-            <h1 
+            <h1
               className="mb-6 text-4xl font-bold md:text-5xl"
               style={{ fontFamily: "'Playfair Display', serif" }}
             >
               {post.title}
             </h1>
-            
+
             <div className="mb-6 flex flex-wrap items-center gap-4 text-sm text-slate-300">
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4" />
@@ -115,9 +115,9 @@ const BlogPost = () => {
                 <Clock className="h-4 w-4" />
                 {post.readTime}
               </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={handleShare}
                 className="border-amber-500 text-amber-400 hover:bg-amber-500/10 hover:text-amber-300 backdrop-blur-sm bg-white/5"
               >
@@ -127,7 +127,7 @@ const BlogPost = () => {
             </div>
           </motion.div>
         </div>
-        
+
         {/* Wave divider */}
         <div className="absolute -bottom-1 left-0 right-0">
           <svg
@@ -154,9 +154,14 @@ const BlogPost = () => {
           >
             <div className="mb-8 overflow-hidden rounded-2xl shadow-lg">
               <img
-                src={post.image}
+                src={post.image || "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200"}
                 alt={post.title}
                 className="h-96 w-full object-cover"
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200";
+                }}
               />
             </div>
 
@@ -169,7 +174,7 @@ const BlogPost = () => {
 
             {/* Related Articles */}
             <div className="mt-16 border-t border-slate-200 pt-12">
-              <h3 
+              <h3
                 className="mb-8 text-2xl font-bold text-slate-800"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
@@ -177,16 +182,21 @@ const BlogPost = () => {
               </h3>
               <div className="grid gap-6 md:grid-cols-2">
                 {blogPosts
-                  .filter((p) => p._id !== id && p.category === post.category)
+                  .filter((p) => p.id !== id && p.category === post.category)
                   .slice(0, 2)
                   .map((relatedPost) => (
-                    <Link key={relatedPost._id} to={`/blog/${relatedPost._id}`}>
+                    <Link key={relatedPost.id} to={`/blog/${relatedPost.id}`}>
                       <Card className="group h-full rounded-2xl overflow-hidden border border-slate-200 bg-white/80 backdrop-blur-sm shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                         <div className="relative h-40 overflow-hidden">
                           <img
-                            src={relatedPost.image}
+                            src={relatedPost.image || "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800"}
                             alt={relatedPost.title}
                             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                            referrerPolicy="no-referrer"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800";
+                            }}
                           />
                         </div>
                         <div className="p-6">
@@ -206,7 +216,7 @@ const BlogPost = () => {
             {/* Back to Blog CTA */}
             <div className="mt-12 text-center">
               <Link to="/blog">
-                <Button 
+                <Button
                   variant="outline"
                   className="border-amber-500 text-amber-600 hover:bg-amber-50 group"
                 >

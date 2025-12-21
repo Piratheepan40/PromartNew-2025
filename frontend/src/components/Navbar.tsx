@@ -34,14 +34,15 @@ const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   const navClasses = isHomePage
-    ? `fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-slate-950/80 backdrop-blur-lg border-b border-white/10" : "bg-transparent border-transparent"
+    ? `fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-background/80 backdrop-blur-lg border-b border-border shadow-sm" : "bg-transparent border-transparent"
     }`
     : "border-b bg-card sticky top-0 z-50";
 
   // Helper for homepage-specific button styles
   const getButtonClass = (className: string = "") => {
     if (!isHomePage) return className;
-    return `text-slate-200 hover:bg-white/10 hover:text-white ${className}`;
+    // Adapt text color for light/dark mode on homepage transparent header
+    return `text-foreground/80 hover:text-foreground hover:bg-accent/50 ${className}`;
   };
 
   const handleLogout = () => {
@@ -204,7 +205,7 @@ const Navbar: React.FC<NavbarProps> = ({
             </Link>
           </div>
           <div className="flex justify-center pt-4">
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
           </div>
         </div>
       );
@@ -325,9 +326,9 @@ const Navbar: React.FC<NavbarProps> = ({
       animate={{ y: 0, opacity: 1 }}
       className={navClasses}
     >
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <div className="container mx-auto flex h-20 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="ProMart" className={`h-12 w-auto sm:h-16 transition-all ${isHomePage ? "brightness-0 invert opacity-90" : ""}`} />
+          <img src={logo} alt="ProMart" className={`h-16 w-auto sm:h-20 transition-all ${isHomePage ? "dark:brightness-0 dark:invert opacity-90" : ""}`} />
         </Link>
 
         {/* Desktop Navigation */}
@@ -344,9 +345,9 @@ const Navbar: React.FC<NavbarProps> = ({
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (
-              <X className={`h-5 w-5 ${isHomePage ? "text-slate-200" : ""}`} />
+              <X className={`h-5 w-5 ${isHomePage ? "text-foreground" : ""}`} />
             ) : (
-              <Menu className={`h-5 w-5 ${isHomePage ? "text-slate-200" : ""}`} />
+              <Menu className={`h-5 w-5 ${isHomePage ? "text-foreground" : ""}`} />
             )}
           </Button>
         </div>

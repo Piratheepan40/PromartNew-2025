@@ -141,9 +141,14 @@ const Blog = () => {
                 <div className="grid md:grid-cols-2">
                   <div className="relative h-80 md:h-auto">
                     <img
-                      src={blogPosts[0].image}
+                      src={blogPosts[0].image || "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200"}
                       alt={blogPosts[0].title}
                       className="h-full w-full object-cover"
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200";
+                      }}
                     />
                   </div>
                   <div className="flex flex-col justify-center p-8">
@@ -173,7 +178,7 @@ const Blog = () => {
                         {blogPosts[0].readTime}
                       </div>
                     </div>
-                    <Link to={`/blog/${blogPosts[0]._id}`}>
+                    <Link to={`/blog/${blogPosts[0].id}`}>
                       <Button className="w-fit bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group">
                         Read More
                         <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -206,7 +211,7 @@ const Blog = () => {
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {filteredPosts.slice(1).map((post, index) => (
                 <motion.div
-                  key={post._id}
+                  key={post.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -215,9 +220,14 @@ const Blog = () => {
                   <Card className="group h-full rounded-2xl overflow-hidden border border-slate-200 bg-white/80 backdrop-blur-sm shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                     <div className="relative h-48 overflow-hidden">
                       <img
-                        src={post.image}
+                        src={post.image || "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800"}
                         alt={post.title}
                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800";
+                        }}
                       />
                     </div>
                     <div className="p-6">
@@ -247,7 +257,7 @@ const Blog = () => {
                           {post.readTime}
                         </div>
                       </div>
-                      <Link to={`/blog/${post._id}`}>
+                      <Link to={`/blog/${post.id}`}>
                         <Button
                           variant="ghost"
                           className="group -ml-4 p-0 text-amber-600 hover:text-amber-700 hover:bg-transparent"
