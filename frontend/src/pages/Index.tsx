@@ -42,18 +42,18 @@ const Index = () => {
   // useEffect removed as we are importing directly
 
   return (
-    <div className="min-h-screen bg-background font-sans text-foreground selection:bg-amber-500/30 overflow-x-hidden">
+    <div className="min-h-screen bg-background font-sans text-foreground selection:bg-blue-500/30 overflow-x-hidden">
       <Navbar />
 
       {/* 🔹 HERO SECTION - Split Layout */}
       <section className="relative flex justify-center overflow-hidden pt-20 pb-24 lg:pt-28 lg:pb-32 bg-background">
         {/* Premium Background */}
         <div className="absolute inset-0 bg-background">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-500/10 via-background to-background"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-500/10 via-background to-background"></div>
           <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/grid-me.png')]"></div>
           {/* Abstract Glows */}
           <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-blue-500/5 rounded-full blur-[100px]" />
-          <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-amber-500/5 rounded-full blur-[120px]" />
+          <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/5 rounded-full blur-[120px]" />
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
@@ -67,14 +67,14 @@ const Index = () => {
               className="text-left"
             >
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/50 border border-border/50 text-muted-foreground text-sm mb-6 backdrop-blur-sm">
-                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
                 The #1 Marketplace for Professionals
               </div>
 
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-[1.1] text-foreground">
                 Connecting <br className="hidden lg:block" />
                 <span>Construction &</span> <br className="hidden lg:block" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-amber-700">Engineering</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Engineering</span>
               </h1>
 
               <p className="text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed font-light">
@@ -84,7 +84,7 @@ const Index = () => {
 
               <div className="flex flex-col sm:flex-row items-start gap-4">
                 <Link to="/listings">
-                  <Button size="lg" className="h-14 px-8 text-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg shadow-lg hover:shadow-amber-500/20 transition-all">
+                  <Button size="lg" className="h-14 px-8 text-lg bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg hover:shadow-blue-600/20 transition-all">
                     Explore Professionals
                   </Button>
                 </Link>
@@ -122,7 +122,7 @@ const Index = () => {
                     </div>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-secondary/20 rounded-3xl">
-                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
                     </div>
                   )}
                 </div>
@@ -150,14 +150,14 @@ const Index = () => {
                       initial={{ width: 0 }}
                       animate={{ width: "85%" }}
                       transition={{ delay: 1.5, duration: 2, ease: "easeOut" }}
-                      className="h-full bg-gradient-to-r from-amber-400 to-amber-600 rounded-full"
+                      className="h-full bg-gradient-to-r from-blue-400 to-indigo-600 rounded-full"
                     ></motion.div>
                   </div>
                 </motion.div>
               </div>
 
               {/* Decorative background blob behind image */}
-              <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-amber-500/10 to-blue-500/10 rounded-full blur-[80px]"></div>
+              <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-blue-600/10 to-blue-500/10 rounded-full blur-[80px]"></div>
             </motion.div>
           </div>
 
@@ -185,7 +185,7 @@ const Index = () => {
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
               <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground font-display">
-                Building Connections. <br /><span className="text-amber-500">Powering Progress.</span>
+                Building Connections. <br /><span className="text-blue-500">Powering Progress.</span>
               </h2>
               <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
                 <p>
@@ -224,7 +224,7 @@ const Index = () => {
             viewport={{ once: true }}
             className="mb-16"
           >
-            <span className="text-amber-500 font-semibold tracking-widest uppercase text-sm mb-4 block">Our Purpose</span>
+            <span className="text-blue-500 font-semibold tracking-widest uppercase text-sm mb-4 block">Our Purpose</span>
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Our Mission</h2>
             <p className="text-xl text-muted-foreground">To transform how construction and engineering professionals connect.</p>
           </motion.div>
@@ -242,9 +242,9 @@ const Index = () => {
               { icon: Newspaper, text: "Stay informed with industry insights" },
               { icon: ShieldCheck, text: "Build long-term credibility in a trusted network" }
             ].map((item, i) => (
-              <motion.div key={i} variants={cardVariant} className="flex items-center gap-4 p-6 rounded-2xl bg-card border border-border hover:border-amber-500/30 transition-colors group shadow-sm hover:shadow-md">
-                <div className="p-3 rounded-xl bg-secondary group-hover:bg-amber-500/20 transition-colors">
-                  <item.icon className="w-6 h-6 text-muted-foreground group-hover:text-amber-400" />
+              <motion.div key={i} variants={cardVariant} className="flex items-center gap-4 p-6 rounded-2xl bg-card border border-border hover:border-blue-500/30 transition-colors group shadow-sm hover:shadow-md">
+                <div className="p-3 rounded-xl bg-secondary group-hover:bg-blue-500/20 transition-colors">
+                  <item.icon className="w-6 h-6 text-muted-foreground group-hover:text-blue-400" />
                 </div>
                 <span className="text-lg font-medium text-foreground">{item.text}</span>
               </motion.div>
@@ -276,9 +276,9 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="group p-8 rounded-3xl bg-card border border-border hover:bg-card/80 hover:border-amber-500/30 transition-all duration-300 hover:-translate-y-1 shadow-sm"
+                className="group p-8 rounded-3xl bg-card border border-border hover:bg-card/80 hover:border-blue-500/30 transition-all duration-300 hover:-translate-y-1 shadow-sm"
               >
-                <feature.icon className="w-10 h-10 text-amber-500 mb-6" />
+                <feature.icon className="w-10 h-10 text-blue-500 mb-6" />
                 <h3 className="text-xl font-bold text-foreground mb-3">{feature.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{feature.desc}</p>
               </motion.div>
@@ -314,7 +314,7 @@ const Index = () => {
                 className="flex flex-col items-center"
               >
                 <div className="w-20 h-20 rounded-full bg-secondary border border-border flex items-center justify-center mb-6 shadow-xl relative">
-                  <div className="absolute inset-0 rounded-full bg-amber-500/10 animate-pulse"></div>
+                  <div className="absolute inset-0 rounded-full bg-blue-500/10 animate-pulse"></div>
                   <item.icon className="w-8 h-8 text-foreground relative z-10" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-3">{item.title}</h3>
@@ -343,7 +343,7 @@ const Index = () => {
             <div className="flex flex-col sm:flex-row justify-center gap-6">
               <Link to="/register">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button size="lg" className="h-14 px-8 text-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-full w-full sm:w-auto">
+                  <Button size="lg" className="h-14 px-8 text-lg bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full w-full sm:w-auto">
                     Join ProMart Today
                   </Button>
                 </motion.div>

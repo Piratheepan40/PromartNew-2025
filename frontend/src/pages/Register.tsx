@@ -55,7 +55,7 @@ const Register = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-background to-amber-50/20 dark:from-slate-950 dark:via-background dark:to-amber-950/20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-background to-blue-50/20 dark:from-slate-950 dark:via-background dark:to-blue-950/20">
       {/* Header */}
       <Navbar />
 
@@ -85,20 +85,20 @@ const Register = () => {
                 </p>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/10">
-                      <Building2 className="h-4 w-4 text-amber-500" />
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600/10">
+                      <Building2 className="h-4 w-4 text-blue-600" />
                     </div>
                     <span className="text-muted-foreground">Showcase your business to qualified clients</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/10">
-                      <Mail className="h-4 w-4 text-amber-500" />
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600/10">
+                      <Mail className="h-4 w-4 text-blue-600" />
                     </div>
                     <span className="text-muted-foreground">Get verified and build trust</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/10">
-                      <Phone className="h-4 w-4 text-amber-500" />
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600/10">
+                      <Phone className="h-4 w-4 text-blue-600" />
                     </div>
                     <span className="text-muted-foreground">Secure OTP verification process</span>
                   </div>
@@ -156,7 +156,7 @@ const Register = () => {
                       onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
                       required
                       placeholder="Your Company Ltd"
-                      className="pl-10 border-input bg-background focus:border-amber-500 focus:ring-amber-500"
+                      className="pl-10 border-input bg-background focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
                 </div>
@@ -172,7 +172,7 @@ const Register = () => {
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       required
                       placeholder="contact@company.com"
-                      className="pl-10 border-input bg-background focus:border-amber-500 focus:ring-amber-500"
+                      className="pl-10 border-input bg-background focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
                 </div>
@@ -188,7 +188,7 @@ const Register = () => {
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       required
                       placeholder="+1234567890"
-                      className="pl-10 border-input bg-background focus:border-amber-500 focus:ring-amber-500"
+                      className="pl-10 border-input bg-background focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
                 </div>
@@ -204,14 +204,14 @@ const Register = () => {
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                       required
                       placeholder="••••••••"
-                      className="pl-10 border-input bg-background focus:border-amber-500 focus:ring-amber-500"
+                      className="pl-10 border-input bg-background focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group"
+                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg hover:shadow-blue-600/25 transition-all duration-300 group"
                   disabled={loading}
                   size="lg"
                 >
@@ -231,7 +231,7 @@ const Register = () => {
                   Already have an account?{' '}
                   <Link
                     to="/login"
-                    className="font-semibold text-amber-600 hover:text-amber-700 hover:underline transition-colors"
+                    className="font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
                   >
                     Sign in
                   </Link>

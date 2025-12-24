@@ -5,7 +5,7 @@ import { Bell, LogOut, User, Menu, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/promart-logo.png";
-import ThemeToggle from "@/components/ThemeToggle";
+
 import { useState, useEffect } from "react";
 
 interface NavbarProps {
@@ -76,7 +76,7 @@ const Navbar: React.FC<NavbarProps> = ({
             </Link>
           ))}
           <Link to="/login">
-            <Button variant="outline" size="sm" className={`hidden sm:flex ${isHomePage ? "border-amber-500/50 text-amber-500 hover:bg-amber-500/10 hover:text-amber-400" : ""}`}>
+            <Button variant="outline" size="sm" className={`hidden sm:flex ${isHomePage ? "border-blue-500/50 text-blue-500 hover:bg-blue-500/10 hover:text-blue-400" : ""}`}>
               Login
             </Button>
           </Link>
@@ -85,7 +85,7 @@ const Navbar: React.FC<NavbarProps> = ({
               Register
             </Button>
           </Link>
-          <ThemeToggle />
+
         </>
       );
     }
@@ -328,7 +328,7 @@ const Navbar: React.FC<NavbarProps> = ({
     >
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="ProMart" className={`h-16 w-auto sm:h-20 transition-all ${isHomePage ? "dark:brightness-0 dark:invert opacity-90" : ""}`} />
+          <img src={logo} alt="ProMart" className={`h-16 w-auto sm:h-20 scale-[2.5] origin-left transition-all ${isHomePage ? "dark:brightness-0 dark:invert opacity-90" : ""}`} />
         </Link>
 
         {/* Desktop Navigation */}
@@ -338,7 +338,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Menu Button */}
         <div className="flex sm:hidden items-center gap-2">
-          <ThemeToggle />
+
           <Button
             variant="ghost"
             size="sm"

@@ -98,6 +98,7 @@ const AdminDashboard = () => {
   const [viewDetailsListing, setViewDetailsListing] = useState<Listing | null>(
     null
   );
+  const [actionType, setActionType] = useState<"approve" | "reject" | null>(null);
 
   useEffect(() => {
     loadData();
@@ -139,26 +140,6 @@ const AdminDashboard = () => {
 
   if (!stats) return loading;
 
-  const handleApprove = async (listingId: string) => {
-    setLoading(true);
-    try {
-      await adminApi.approveListing(listingId);
-      toast({
-        title: "Listing approved",
-        description: "The listing is now visible to the public",
-      });
-      setSelectedListing(null);
-      loadData();
-    } catch (error) {
-      toast({
-        title: "Failed to approve",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handledelete = async (listingId: string) => {
     setLoading(true);
     try {
@@ -179,8 +160,10 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleReject = async (listingId: string) => {
-    if (!comment.trim()) {
+  const handleProcessAction = async () => {
+    if (!selectedListing || !actionType) return;
+
+    if (actionType === "reject" && !comment.trim()) {
       toast({
         title: "Comment required",
         description: "Please provide a reason for rejection",
@@ -191,18 +174,28 @@ const AdminDashboard = () => {
 
     setLoading(true);
     try {
-      await adminApi.rejectListing(listingId, comment);
-      toast({
-        title: "Listing rejected",
-        description: "The company has been notified with your comment",
-      });
+      if (actionType === "approve") {
+        await adminApi.approveListing(selectedListing._id, comment);
+        toast({
+          title: "Listing approved",
+          description: "The listing is now visible to the public.",
+        });
+      } else {
+        await adminApi.rejectListing(selectedListing._id, comment);
+        toast({
+          title: "Listing rejected",
+          description: "The company has been notified with your comment.",
+        });
+      }
+
       setSelectedListing(null);
+      setActionType(null);
       setComment("");
       loadData();
     } catch (error) {
-      console.error("Rejection error:", error);
+      console.error("Action error:", error);
       toast({
-        title: "Failed to reject listing",
+        title: `Failed to ${actionType} listing`,
         description: "Please try again",
         variant: "destructive",
       });
@@ -336,7 +329,11 @@ const AdminDashboard = () => {
                           size="sm"
                           variant="outline"
                           className="border-success text-success hover:bg-success hover:text-success-foreground"
-                          onClick={() => handleApprove(listing._id)}
+                          onClick={() => {
+                            setSelectedListing(listing);
+                            setActionType("approve");
+                            setComment("");
+                          }}
                           disabled={loading}
                         >
                           <CheckCircle className="mr-2 h-4 w-4" />
@@ -347,7 +344,11 @@ const AdminDashboard = () => {
                           size="sm"
                           variant="outline"
                           className="border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                          onClick={() => setSelectedListing(listing)}
+                          onClick={() => {
+                            setSelectedListing(listing);
+                            setActionType("reject");
+                            setComment("");
+                          }}
                           disabled={loading}
                         >
                           <XCircle className="mr-2 h-4 w-4" />
@@ -704,44 +705,66 @@ const AdminDashboard = () => {
       </div>
 
       <Dialog
-        open={!!selectedListing}
-        onOpenChange={() => setSelectedListing(null)}
+        open={!!selectedListing && !!actionType}
+        onOpenChange={() => {
+          setSelectedListing(null);
+          setActionType(null);
+          setComment("");
+        }}
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Reject Listing</DialogTitle>
+            <DialogTitle>
+              {actionType === "approve" ? "Approve Listing" : "Reject Listing"}
+            </DialogTitle>
             <p className="text-sm text-muted-foreground">
-              Provide feedback to help the company improve their listing
+              {actionType === "approve"
+                ? "Send a confirmation message to the company (optional)."
+                : "Provide feedback to help the company improve their listing."}
             </p>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="comment">Rejection Reason *</Label>
+              <Label htmlFor="comment">
+                {actionType === "approve" ? "Approval Message" : "Rejection Reason *"}
+              </Label>
               <Textarea
                 id="comment"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="Explain why this listing doesn't meet our standards..."
+                placeholder={
+                  actionType === "approve"
+                    ? "Example: Welcome aboard! Your listing looks great..."
+                    : "Explain why this listing doesn't meet our standards..."
+                }
                 rows={5}
               />
             </div>
             <div className="flex gap-3">
               <Button
                 variant="outline"
-                onClick={() => setSelectedListing(null)}
+                onClick={() => {
+                  setSelectedListing(null);
+                  setActionType(null);
+                }}
                 className="flex-1"
               >
                 Cancel
               </Button>
               <Button
-                variant="destructive"
-                onClick={() =>
-                  selectedListing && handleReject(selectedListing._id)
-                }
-                disabled={loading || !comment.trim()}
-                className="flex-1"
+                variant={actionType === "approve" ? "default" : "destructive"}
+                onClick={handleProcessAction}
+                disabled={loading || (actionType === "reject" && !comment.trim())}
+                className={`flex-1 ${actionType === "approve"
+                  ? "bg-success hover:bg-success/90 text-white"
+                  : ""
+                  }`}
               >
-                {loading ? "Rejecting..." : "Reject Listing"}
+                {loading
+                  ? "Processing..."
+                  : actionType === "approve"
+                    ? "Approve Listing"
+                    : "Reject Listing"}
               </Button>
             </div>
           </div>

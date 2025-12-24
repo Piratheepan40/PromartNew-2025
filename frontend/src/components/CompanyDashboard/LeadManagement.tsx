@@ -75,7 +75,7 @@ const LeadManagement = () => {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
             </div>
         );
     }
@@ -94,7 +94,7 @@ const LeadManagement = () => {
             <Card className="border-slate-200 shadow-lg overflow-hidden">
                 <CardHeader className="bg-slate-50/50 border-b">
                     <CardTitle className="text-lg font-semibold text-slate-700 flex items-center gap-2">
-                        <Mail className="h-5 w-5 text-amber-500" />
+                        <Mail className="h-5 w-5 text-blue-500" />
                         Recent Inquiries
                     </CardTitle>
                 </CardHeader>
@@ -129,7 +129,7 @@ const LeadManagement = () => {
                                             </div>
                                         </TableCell>
                                         <TableCell>
-                                            <Badge variant="outline" className="border-amber-200 bg-amber-50 text-amber-700">
+                                            <Badge variant="outline" className="border-blue-200 bg-blue-50 text-blue-700">
                                                 {lead.listing?.title || "Unknown Listing"}
                                             </Badge>
                                         </TableCell>
@@ -138,7 +138,7 @@ const LeadManagement = () => {
                                         </TableCell>
                                         <TableCell>{getStatusBadge(lead.status)}</TableCell>
                                         <TableCell className="text-right">
-                                            <Button variant="ghost" size="icon" className="hover:text-amber-600" onClick={(e) => {
+                                            <Button variant="ghost" size="icon" className="hover:text-blue-600" onClick={(e) => {
                                                 e.stopPropagation();
                                                 setSelectedLead(lead);
                                                 if (lead.status === 'new') handleStatusUpdate(lead.id, 'read');
@@ -195,7 +195,7 @@ const LeadManagement = () => {
                                         <p className="text-xs font-semibold text-slate-500 uppercase flex items-center gap-1">
                                             <ExternalLink className="h-3 w-3" /> Related Listing
                                         </p>
-                                        <p className="text-sm font-medium text-amber-600">{selectedLead.listing?.title}</p>
+                                        <p className="text-sm font-medium text-blue-600">{selectedLead.listing?.title}</p>
                                     </div>
                                 </div>
 

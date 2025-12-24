@@ -46,7 +46,7 @@ const BlogPost = () => {
         <div className="container mx-auto px-4 py-20 text-center">
           <h1 className="mb-4 text-3xl font-bold text-slate-800">Post Not Found</h1>
           <Link to="/blog">
-            <Button className="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold">
+            <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Blog
             </Button>
@@ -91,7 +91,7 @@ const BlogPost = () => {
               </Button>
             </Link>
 
-            <Badge className="mb-4 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 border-0">
+            <Badge className="mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0">
               {post.category}
             </Badge>
 
@@ -119,7 +119,7 @@ const BlogPost = () => {
                 variant="outline"
                 size="sm"
                 onClick={handleShare}
-                className="border-amber-500 text-amber-400 hover:bg-amber-500/10 hover:text-amber-300 backdrop-blur-sm bg-white/5"
+                className="border-blue-500 text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 backdrop-blur-sm bg-white/5"
               >
                 <Share2 className="mr-2 h-4 w-4" />
                 Share
@@ -167,7 +167,7 @@ const BlogPost = () => {
 
             <Card className="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm p-8 shadow-lg">
               <div
-                className="prose prose-lg max-w-none prose-headings:font-bold prose-h2:mb-4 prose-h2:mt-8 prose-h2:text-2xl prose-p:mb-4 prose-p:text-slate-600 prose-strong:text-slate-800 prose-headings:text-slate-800 prose-ul:text-slate-600 prose-ol:text-slate-600 prose-li:text-slate-600 prose-blockquote:border-amber-500 prose-blockquote:text-slate-600"
+                className="prose prose-lg max-w-none prose-headings:font-bold prose-h2:mb-4 prose-h2:mt-8 prose-h2:text-2xl prose-p:mb-4 prose-p:text-slate-600 prose-strong:text-slate-800 prose-headings:text-slate-800 prose-ul:text-slate-600 prose-ol:text-slate-600 prose-li:text-slate-600 prose-blockquote:border-blue-500 prose-blockquote:text-slate-600"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
             </Card>
@@ -203,7 +203,7 @@ const BlogPost = () => {
                           <Badge variant="secondary" className="mb-3 bg-slate-100 text-slate-700">
                             {relatedPost.category}
                           </Badge>
-                          <h4 className="font-semibold text-slate-800 group-hover:text-amber-600 transition-colors">
+                          <h4 className="font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
                             {relatedPost.title}
                           </h4>
                         </div>
@@ -218,7 +218,7 @@ const BlogPost = () => {
               <Link to="/blog">
                 <Button
                   variant="outline"
-                  className="border-amber-500 text-amber-600 hover:bg-amber-50 group"
+                  className="border-blue-500 text-blue-600 hover:bg-blue-50 group"
                 >
                   <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
                   Back to All Articles
@@ -248,7 +248,7 @@ const BlogPost = () => {
             </p>
             <Button
               size="lg"
-              className="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-blue-600/25 transition-all duration-300 group"
               onClick={() => window.location.href = '/register'}
             >
               Get Started Today

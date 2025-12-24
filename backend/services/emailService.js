@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-const sendEmail = async (to, subject, text) => {
+const sendEmail = async (to, subject, text, options = {}) => {
   try {
     // ✅ Validate inputs
     if (!to || !subject || !text) {
@@ -28,30 +28,47 @@ const sendEmail = async (to, subject, text) => {
     await transporter.verify();
     console.log("✅ Email transporter verified successfully");
 
+    const { isDirectMessage, replyTo } = options || {};
+
     const mailOptions = {
-      from: `"ProMart" <${process.env.EMAIL_USER}>`,
+      from: `"ProMart Support" <${process.env.EMAIL_USER}>`,
       to,
       subject,
+      replyTo: replyTo || process.env.EMAIL_USER,
       text,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px 10px 0 0; color: white;">
-            <h1 style="margin: 0; font-size: 24px;">ProMart</h1>
-            <p style="margin: 5px 0 0 0; opacity: 0.9;">Business Directory</p>
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+          <div style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); padding: 30px; border-radius: 12px 12px 0 0; color: white; text-align: center;">
+            <h1 style="margin: 0; font-size: 28px; font-weight: 700;">ProMart</h1>
+            <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 16px;">Business Directory</p>
           </div>
-          <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px;">
-            <h2 style="color: #333; margin-top: 0;">${subject}</h2>
-            <div style="background: white; padding: 20px; border-radius: 5px; border-left: 4px solid #667eea;">
+          
+          <div style="background: #ffffff; padding: 40px 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px;">
+            <h2 style="color: #1f2937; margin-top: 0; font-size: 22px; margin-bottom: 25px;">${subject}</h2>
+            
+            <div style="font-size: 16px; line-height: 1.6; color: #4b5563;">
               ${text.replace(/\n/g, '<br>')}
             </div>
-            <p style="color: #666; margin-top: 20px;">
+
+            <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+
+            <p style="color: #6b7280; font-size: 15px; margin: 0;">
               Best regards,<br>
               <strong>The ProMart Team</strong>
+              ${isDirectMessage ? '<br><span style="font-size: 13px; color: #9ca3af;">(Sent directly by Administrator)</span>' : ''}
             </p>
           </div>
-          <div style="text-align: center; margin-top: 20px; color: #999; font-size: 12px;">
-            <p>This is an automated message, please do not reply to this email.</p>
+
+          ${!isDirectMessage ? `
+          <div style="text-align: center; margin-top: 25px; color: #9ca3af; font-size: 13px;">
+            <p style="margin: 0;">This is an automated message, please do not reply directly to this email.</p>
+            <p style="margin: 5px 0 0 0;">&copy; ${new Date().getFullYear()} ProMart. All rights reserved.</p>
           </div>
+          ` : `
+          <div style="text-align: center; margin-top: 25px; color: #9ca3af; font-size: 13px;">
+             <p style="margin: 0;">&copy; ${new Date().getFullYear()} ProMart. All rights reserved.</p>
+          </div>
+          `}
         </div>
       `,
     };
@@ -59,11 +76,11 @@ const sendEmail = async (to, subject, text) => {
     const result = await transporter.sendMail(mailOptions);
     console.log(`✅ Email sent successfully to: ${to}`);
     console.log(`✅ Message ID: ${result.messageId}`);
-    
+
     return result;
   } catch (error) {
     console.error("❌ Email sending failed:", error);
-    
+
     // More specific error messages
     if (error.code === 'EAUTH') {
       console.error("❌ Authentication failed - check email credentials");
@@ -72,7 +89,7 @@ const sendEmail = async (to, subject, text) => {
     } else if (error.code === 'ECONNECTION') {
       console.error("❌ Connection failed - check internet connection");
     }
-    
+
     throw error; // Re-throw to handle in calling function
   }
 };

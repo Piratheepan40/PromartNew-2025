@@ -26,7 +26,7 @@ const Footer = () => {
               <img
                 src={logo}
                 alt="ProMart"
-                className="h-12 brightness-0 invert"
+                className="h-16 brightness-0 invert"
               />
             </Link>
             <p className="text-sm text-slate-300 mb-3 max-w-xs">
@@ -36,11 +36,11 @@ const Footer = () => {
             {/* Contact Info - Horizontal on desktop */}
             <div className="flex flex-col sm:flex-row gap-4 text-sm text-slate-400 mt-4">
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-amber-500" />
+                <Mail className="h-4 w-4 text-blue-500" />
                 <a href="mailto:promartlk@gmail.com" className="hover:text-white transition-colors">promartlk@gmail.com</a>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-amber-500" />
+                <Phone className="h-4 w-4 text-blue-500" />
                 <a href="tel:+94779520933" className="hover:text-white transition-colors">077 952 0933</a>
               </div>
             </div>

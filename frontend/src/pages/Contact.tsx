@@ -121,8 +121,8 @@ const Contact = () => {
               transition={{ duration: 0.6 }}
               className="text-center lg:text-left"
             >
-              <MessageSquare className="mb-6 h-16 w-16 lg:mx-0 mx-auto text-amber-400" />
-              <h1 
+              <MessageSquare className="mb-6 h-16 w-16 lg:mx-0 mx-auto text-blue-400" />
+              <h1
                 className="mb-6 text-5xl font-bold tracking-tight"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
@@ -145,7 +145,7 @@ const Contact = () => {
             )}
           </div>
         </div>
-        
+
         {/* Wave divider like Index page */}
         <div className="absolute -bottom-1 left-0 right-0">
           <svg
@@ -188,8 +188,8 @@ const Contact = () => {
                       className="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                     >
                       <div className="flex items-start gap-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-amber-500/10">
-                          <info.icon className="h-6 w-6 text-amber-500" />
+                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-600/10">
+                          <info.icon className="h-6 w-6 text-blue-600" />
                         </div>
                         <div className="flex-1">
                           <h3 className="mb-1 font-semibold text-slate-800">{info.title}</h3>
@@ -198,7 +198,7 @@ const Contact = () => {
                               href={info.link}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-sm text-slate-600 hover:text-amber-500 transition-colors"
+                              className="text-sm text-slate-600 hover:text-blue-600 transition-colors"
                             >
                               {info.detail}
                             </a>
@@ -235,7 +235,7 @@ const Contact = () => {
                           }
                           required
                           placeholder="John Doe"
-                          className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
+                          className="border-slate-300 focus:border-blue-500 focus:ring-blue-500"
                         />
                       </div>
 
@@ -250,7 +250,7 @@ const Contact = () => {
                           }
                           required
                           placeholder="john@company.com"
-                          className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
+                          className="border-slate-300 focus:border-blue-500 focus:ring-blue-500"
                         />
                       </div>
                     </div>
@@ -265,7 +265,7 @@ const Contact = () => {
                         }
                         required
                         placeholder="How can we help you?"
-                        className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
+                        className="border-slate-300 focus:border-blue-500 focus:ring-blue-500"
                       />
                     </div>
 
@@ -280,14 +280,14 @@ const Contact = () => {
                         required
                         placeholder="Tell us more about your inquiry..."
                         rows={8}
-                        className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
+                        className="border-slate-300 focus:border-blue-500 focus:ring-blue-500"
                       />
                     </div>
 
-                    <Button 
-                      type="submit" 
-                      disabled={loading} 
-                      className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group" 
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg hover:shadow-blue-600/25 transition-all duration-300 group"
                       size="lg"
                     >
                       {loading ? 'Sending...' : (
@@ -310,7 +310,7 @@ const Contact = () => {
       </section>
 
       {/* Map Section */}
-      <section className="border-t bg-gradient-to-br from-slate-50 to-amber-50/20 py-16">
+      <section className="border-t bg-gradient-to-br from-slate-50 to-blue-50/20 py-16">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="mb-4 text-3xl font-bold text-slate-800">Visit Our Office</h2>
@@ -318,13 +318,13 @@ const Contact = () => {
               We welcome you to visit our headquarters in San Francisco
             </p>
             <div className="overflow-hidden rounded-2xl shadow-lg">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3559.1930316196117!2d80.15686227450514!3d9.67793707849471!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3afeff48d3d8b96d%3A0x44887b8f7c3bd3a0!2sNorthern%20Engineering%20Solutions!5e1!3m2!1sen!2slk!4v1763182299324!5m2!1sen!2slk" 
-                width="100%" 
-                height="450" 
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3559.1930316196117!2d80.15686227450514!3d9.67793707849471!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3afeff48d3d8b96d%3A0x44887b8f7c3bd3a0!2sNorthern%20Engineering%20Solutions!5e1!3m2!1sen!2slk!4v1763182299324!5m2!1sen!2slk"
+                width="100%"
+                height="450"
                 style={{ border: 0 }}
                 allowFullScreen
-                loading="lazy" 
+                loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Office Location"
               ></iframe>
@@ -352,7 +352,7 @@ const Contact = () => {
             </p>
             <Button
               size="lg"
-              className="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-blue-600/25 transition-all duration-300 group"
               onClick={() => window.location.href = '/register'}
             >
               Start Free Today

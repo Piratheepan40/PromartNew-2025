@@ -62,7 +62,7 @@ const Login = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-background to-amber-50/20 dark:from-slate-950 dark:via-background dark:to-amber-950/20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-background to-blue-50/20 dark:from-slate-950 dark:via-background dark:to-blue-950/20">
       {/* Header */}
       <Navbar />
 
@@ -144,7 +144,7 @@ const Login = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       placeholder="you@company.com"
-                      className="pl-10 border-input bg-background focus:border-amber-500 focus:ring-amber-500"
+                      className="pl-10 border-input bg-background focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
                 </div>
@@ -160,14 +160,14 @@ const Login = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       placeholder="••••••••"
-                      className="pl-10 border-input bg-background focus:border-amber-500 focus:ring-amber-500"
+                      className="pl-10 border-input bg-background focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group"
+                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg hover:shadow-blue-600/25 transition-all duration-300 group"
                   disabled={loading}
                   size="lg"
                 >
@@ -187,7 +187,7 @@ const Login = () => {
                   Don't have an account?{' '}
                   <Link
                     to="/register"
-                    className="font-semibold text-amber-600 hover:text-amber-700 hover:underline transition-colors"
+                    className="font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
                   >
                     Create account
                   </Link>

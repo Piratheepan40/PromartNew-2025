@@ -1,22 +1,43 @@
+# =========================
 # Node modules
+# =========================
 node_modules/
 
-# Environment files
+# =========================
+# Environment variables
+# =========================
 .env
+.env.local
+.env.*.local
 
+# =========================
+# Test / secret scripts
+# =========================
+test-groq.js
+backend/scripts/test-groq.js
+
+# =========================
 # Logs
-logs
+# =========================
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# OS files
+# =========================
+# OS junk
+# =========================
 .DS_Store
 Thumbs.db
 
-# Uploads (optional)
+# =========================
+# Uploads (user files)
+# =========================
 uploads/
 
-# Build files (if MERN)
+# =========================
+# Build files
+# =========================
 frontend/build/
+frontend/dist/

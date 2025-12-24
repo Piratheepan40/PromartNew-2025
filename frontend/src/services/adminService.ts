@@ -44,11 +44,11 @@ const adminApi = {
   },
 
   // ✅ Reject listing
- // In your adminApi service
-  rejectListing : async (listingId: string, reason: string) => {
-  const res = await API.put(`/admin/listings/${listingId}/reject`, { reason });
-  return res.data;
-   },
+  // In your adminApi service
+  rejectListing: async (listingId: string, reason: string) => {
+    const res = await API.put(`/admin/listings/${listingId}/reject`, { reason });
+    return res.data;
+  },
 
   // ✅ Delete listing
   deleteListing: async (listingId: string) => {
@@ -63,9 +63,9 @@ const adminApi = {
   },
   // ✅ Get monthly stats for charts
   getMonthlyStats: async () => {
-  const { data } = await API.get("/admin/listings/monthly");
-  return data;
-},
+    const { data } = await API.get("/admin/listings/monthly");
+    return data;
+  },
 
 };
 

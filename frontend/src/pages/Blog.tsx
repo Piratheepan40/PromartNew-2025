@@ -103,7 +103,7 @@ const Blog = () => {
       </section>
 
       {/* Categories */}
-      <section className="border-b bg-gradient-to-br from-slate-50 to-amber-50/20 py-6">
+      <section className="border-b bg-gradient-to-br from-slate-50 to-blue-50/20 py-6">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-2">
             {categories.map((category) => (
@@ -114,7 +114,7 @@ const Blog = () => {
                 onClick={() => setSelectedCategory(category)}
                 className={
                   category === selectedCategory
-                    ? "bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold border-0"
+                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold border-0"
                     : "border-slate-300 text-slate-700 hover:bg-slate-100"
                 }
               >
@@ -134,7 +134,7 @@ const Blog = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <Badge className="mb-4 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 border-0">
+              <Badge className="mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0">
                 Featured Post
               </Badge>
               <Card className="rounded-2xl overflow-hidden border border-slate-200 bg-white/80 backdrop-blur-sm shadow-lg">
@@ -179,7 +179,7 @@ const Blog = () => {
                       </div>
                     </div>
                     <Link to={`/blog/${blogPosts[0].id}`}>
-                      <Button className="w-fit bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group">
+                      <Button className="w-fit bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg hover:shadow-blue-600/25 transition-all duration-300 group">
                         Read More
                         <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </Button>
@@ -237,7 +237,7 @@ const Blog = () => {
                       >
                         {post.category}
                       </Badge>
-                      <h3 className="mb-3 text-xl font-semibold text-slate-800 group-hover:text-amber-600 transition-colors">
+                      <h3 className="mb-3 text-xl font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
                         {post.title}
                       </h3>
                       <p className="mb-4 line-clamp-2 text-sm text-slate-600">
@@ -260,7 +260,7 @@ const Blog = () => {
                       <Link to={`/blog/${post.id}`}>
                         <Button
                           variant="ghost"
-                          className="group -ml-4 p-0 text-amber-600 hover:text-amber-700 hover:bg-transparent"
+                          className="group -ml-4 p-0 text-blue-600 hover:text-blue-700 hover:bg-transparent"
                         >
                           Read More
                           <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -276,7 +276,7 @@ const Blog = () => {
       </section>
 
       {/* Newsletter Section */}
-      <section className="border-t bg-gradient-to-br from-slate-50 to-amber-50/20 py-16 ">
+      <section className="border-t bg-gradient-to-br from-slate-50 to-blue-50/20 py-16 ">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -298,11 +298,11 @@ const Blog = () => {
               <Input
                 type="email"
                 placeholder="Enter your email"
-                className="rounded-xl border-slate-300 bg-white px-4 py-3 text-sm focus:border-amber-500 focus:ring-amber-500 sm:w-80"
+                className="rounded-xl border-slate-300 bg-white px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 sm:w-80"
               />
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold shadow-lg hover:shadow-amber-500/40"
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg hover:shadow-blue-600/25"
               >
                 Subscribe
               </Button>
@@ -330,7 +330,7 @@ const Blog = () => {
             </p>
             <Button
               size="lg"
-              className="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-amber-500/40 transition-all duration-300 group"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-blue-600/25 transition-all duration-300 group"
               onClick={() => (window.location.href = "/register")}
             >
               Get Started Today

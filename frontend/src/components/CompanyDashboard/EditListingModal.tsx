@@ -196,7 +196,7 @@ const EditListingModal = ({ open, onOpenChange, listing, onUpdated }) => {
       // 🧩 Handle key features as JSON string
       formDataToSend.append(
         "keyFeatures",
-        JSON.stringify([JSON.stringify(formData.keyFeatures)])
+        JSON.stringify(formData.keyFeatures)
       );
 
       // ✅ Preserve ALL metadata for existing files

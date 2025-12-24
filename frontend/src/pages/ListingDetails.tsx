@@ -138,7 +138,7 @@ const ListingDetails = () => {
             </p>
             <Button
               onClick={() => navigate("/listings")}
-              className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold"
+              className="bg-blue-600 hover:bg-blue-700 text-slate-950 font-bold"
             >
               <ArrowLeft className="mr-2 h-4 w-4" /> Browse All Listings
             </Button>
@@ -149,7 +149,7 @@ const ListingDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background selection:bg-amber-500/30">
+    <div className="min-h-screen bg-background selection:bg-blue-500/30">
       <Navbar />
 
       {/* 🔹 HERO SECTION - Immersive Header */}
@@ -168,13 +168,13 @@ const ListingDetails = () => {
             className="mb-8 flex items-center gap-2 text-sm text-slate-400"
           >
             <span
-              className="hover:text-amber-500 cursor-pointer transition-colors"
+              className="hover:text-blue-500 cursor-pointer transition-colors"
               onClick={() => navigate('/listings')}
             >
               Listings
             </span>
             <ChevronRight className="h-4 w-4" />
-            <span className="text-amber-500 font-medium truncate max-w-[200px]">{listing?.category}</span>
+            <span className="text-blue-500 font-medium truncate max-w-[200px]">{listing?.category}</span>
           </motion.div>
 
           <div className="grid lg:grid-cols-3 gap-8 items-start">
@@ -184,33 +184,41 @@ const ListingDetails = () => {
               transition={{ duration: 0.5 }}
               className="lg:col-span-2"
             >
-              <div className="flex items-center gap-3 mb-4">
-                <Badge className="bg-amber-500/20 text-amber-500 border-amber-500/30 hover:bg-amber-500/30">
+              <div className="flex flex-wrap items-center gap-3 mb-6">
+                <Badge className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 transition-colors backdrop-blur-md">
                   {listing.category}
                 </Badge>
                 {listing.status === 'approved' && (
-                  <Badge variant="outline" className="text-emerald-400 border-emerald-400/30 bg-emerald-400/10 gap-1">
-                    <CheckCircle2 className="w-3 h-3" /> Verified Listing
+                  <Badge variant="outline" className="px-3 py-1 rounded-full text-emerald-400 border-emerald-500/30 bg-emerald-500/5 backdrop-blur-md gap-1.5 font-medium">
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Verified Listing
                   </Badge>
                 )}
               </div>
 
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight font-display">
+              <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6 leading-[1.1] font-display text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-400 drop-shadow-sm">
                 {listing.title}
               </h1>
 
-              <div className="flex flex-wrap items-center gap-6 text-slate-300 mb-8">
-                <div className="flex items-center gap-2">
-                  <Building2 className="w-5 h-5 text-amber-500" />
-                  <span className="font-medium text-white">{listing.companyName}</span>
+              <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 text-slate-400 mb-8 border-l-2 border-blue-500/30 pl-4 md:border-0 md:pl-0">
+                <div className="flex items-center gap-3 group cursor-pointer">
+                  <div className="p-2 rounded-lg bg-slate-800/50 group-hover:bg-blue-500/10 transition-colors">
+                    <Building2 className="w-5 h-5 text-blue-500" />
+                  </div>
+                  <span className="font-semibold text-slate-200 group-hover:text-blue-400 transition-colors text-lg">{listing.companyName}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-slate-500" />
-                  <span>{listing.location || "Remote / Flexible"}</span>
+                <div className="w-px h-8 bg-slate-800 hidden md:block"></div>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-slate-800/50">
+                    <MapPin className="w-5 h-5 text-slate-500" />
+                  </div>
+                  <span className="font-medium">{listing.location || "Remote / Flexible"}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-slate-500" />
-                  <span>Posted {new Date(listing.createdAt || Date.now()).toLocaleDateString()}</span>
+                <div className="w-px h-8 bg-slate-800 hidden md:block"></div>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-slate-800/50">
+                    <Calendar className="w-5 h-5 text-slate-500" />
+                  </div>
+                  <span className="font-medium">Posted {new Date(listing.createdAt || Date.now()).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}</span>
                 </div>
               </div>
             </motion.div>
@@ -226,28 +234,49 @@ const ListingDetails = () => {
           <div className="lg:col-span-2 space-y-8">
 
             {/* Key Features Card (Highlighted) */}
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <Card className="rounded-2xl border-border shadow-lg overflow-hidden">
-                <div className="bg-gradient-to-r from-amber-500/10 to-transparent p-1 border-b border-amber-500/20">
+              <Card className="rounded-3xl border-0 shadow-xl overflow-hidden ring-1 ring-slate-200 dark:ring-slate-800 bg-white dark:bg-slate-900">
+                <div className="bg-gradient-to-r from-blue-600/10 to-transparent p-1 border-b border-blue-600/20">
                   <div className="px-6 py-2 flex items-center gap-2">
-                    <Award className="w-5 h-5 text-amber-600" />
-                    <span className="font-bold text-amber-700 dark:text-amber-500 text-sm uppercase tracking-wide">Key Highlights</span>
+                    <Award className="w-5 h-5 text-blue-600" />
+                    <span className="font-bold text-blue-700 dark:text-blue-500 text-sm uppercase tracking-wide">Key Highlights</span>
                   </div>
                 </div>
                 <div className="p-8 bg-card">
                   {(() => {
                     let features: string[] = [];
-                    if (listing?.keyFeatures && Array.isArray(listing.keyFeatures) && listing.keyFeatures.length > 0) {
-                      const firstItem = listing.keyFeatures[0];
-                      if (typeof firstItem === "string" && firstItem.startsWith("[")) {
-                        try { features = JSON.parse(firstItem); } catch (e) { features = [firstItem]; }
-                      } else if (Array.isArray(firstItem)) { features = firstItem; }
-                      else if (typeof firstItem === "string") { features = [firstItem]; }
-                    } else if (Array.isArray(listing?.keyFeatures)) { features = listing.keyFeatures; }
+                    // Robust handling of keyFeatures
+                    if (listing?.keyFeatures) {
+                      if (Array.isArray(listing.keyFeatures)) {
+                        // Handle legacy case where first element is a JSON string of array
+                        if (listing.keyFeatures.length > 0 && typeof listing.keyFeatures[0] === 'string' && listing.keyFeatures[0].startsWith('[')) {
+                          try {
+                            const parsed = JSON.parse(listing.keyFeatures[0]);
+                            if (Array.isArray(parsed)) features = parsed;
+                            else features = [listing.keyFeatures[0]]; // Fallback
+                          } catch {
+                            features = listing.keyFeatures;
+                          }
+                        } else {
+                          // Normal array of strings
+                          features = listing.keyFeatures;
+                        }
+                      } else if (typeof listing.keyFeatures === 'string') {
+                        try {
+                          // Attempt to parse stringified array (fixes legacy double-stringified data)
+                          const parsed = JSON.parse(listing.keyFeatures);
+                          if (Array.isArray(parsed)) features = parsed;
+                          else features = [listing.keyFeatures];
+                        } catch {
+                          features = [listing.keyFeatures];
+                        }
+                      }
+                    }
 
                     features = features.filter((f) => f && typeof f === "string");
 
@@ -276,7 +305,7 @@ const ListingDetails = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <Card className="p-8 rounded-2xl border-border shadow-sm">
+              <Card className="p-8 rounded-3xl border-0 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800 bg-white dark:bg-slate-900">
                 <h2 className="text-2xl font-bold font-display text-foreground mb-6 flex items-center gap-3">
                   <FileText className="w-6 h-6 text-muted-foreground" />
                   About this Listing
@@ -285,46 +314,38 @@ const ListingDetails = () => {
                   <p className="text-lg leading-relaxed text-muted-foreground whitespace-pre-line">
                     {listing.description}
                   </p>
-                  <p className="border-l-4 border-amber-500 pl-4 py-2 bg-amber-500/5 text-foreground italic mt-6 rounded-r-lg">
+                  <p className="border-l-4 border-blue-500 pl-4 py-2 bg-blue-500/5 text-foreground italic mt-6 rounded-r-lg">
                     "{listing.companyName} is committed to delivering excellence in {listing.category}."
                   </p>
                 </div>
               </Card>
             </motion.div>
 
-            {/* Gallery (Placeholder) */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <Card className="p-8 rounded-2xl border-border shadow-sm">
-                <h2 className="text-2xl font-bold font-display text-foreground mb-6">Project Gallery</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="aspect-video rounded-xl bg-muted overflow-hidden group cursor-pointer relative">
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
-                      <img
-                        src={`https://source.unsplash.com/random/800x600?construction,building,${i}`}
-                        alt="Gallery"
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                    </div>
-                  ))}
-                  {listing.attachments && listing.attachments.length > 0 && listing.attachments.map((att, i) => (
-                    <div key={`att-${i}`} className="aspect-video rounded-xl bg-muted overflow-hidden group cursor-pointer relative">
-                      <img src={att.url} alt={att.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                    </div>
-                  ))}
-                </div>
-              </Card>
-            </motion.div>
+            {/* Gallery */}
+            {listing.attachments && listing.attachments.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <Card className="p-8 rounded-3xl border-0 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800 bg-white dark:bg-slate-900">
+                  <h2 className="text-2xl font-bold font-display text-foreground mb-6">Project Gallery</h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {listing.attachments.map((att, i) => (
+                      <div key={`att-${i}`} className="aspect-video rounded-2xl bg-muted overflow-hidden group cursor-pointer relative">
+                        <img src={att.url} alt={att.name || 'Gallery Image'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              </motion.div>
+            )}
 
             {/* Admin Verification (Conditional) */}
             {isAdmin && listing.verificationDocuments && listing.verificationDocuments.length > 0 && (
-              <Card className="p-8 rounded-2xl border-2 border-amber-500/20 bg-amber-50/50 dark:bg-amber-950/10">
+              <Card className="p-8 rounded-3xl border-2 border-blue-500/20 bg-blue-50/50 dark:bg-blue-900/10">
                 <div className="flex items-center gap-3 mb-6">
-                  <Shield className="w-6 h-6 text-amber-600" />
+                  <Shield className="w-6 h-6 text-blue-600" />
                   <h3 className="text-xl font-bold text-foreground">Admin Verification Documents</h3>
                 </div>
                 <div className="space-y-3">
@@ -352,97 +373,127 @@ const ListingDetails = () => {
           <div className="lg:col-span-1">
             <div className="sticky top-24 space-y-6">
 
-              {/* CTA Card (Replaces "Actions") */}
+              {/* ACTION CARD: Contact & Share */}
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5 }}
               >
-                <Card className="p-6 rounded-2xl border-border shadow-xl bg-card relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-600"></div>
-                  <h3 className="font-bold text-xl text-foreground mb-2">Interested?</h3>
-                  <p className="text-muted-foreground mb-6">Connect with {listing.companyName} directly to discuss your project.</p>
+                <Card className="relative overflow-hidden rounded-3xl border-0 shadow-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
+                  {/* Decorative Background Blur */}
+                  <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-600/10 rounded-full blur-3xl rounded-bl-none"></div>
 
-                  <Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen}>
-                    <DialogTrigger asChild>
-                      <Button size="lg" className="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold h-12 text-lg shadow-lg hover:shadow-amber-500/25 transition-all mb-3">
-                        Contact Company <ArrowRight className="w-5 h-5 ml-2" />
+                  <div className="p-8 relative z-10">
+                    <div className="mb-6 text-center">
+                      <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2 font-display">
+                        Interested?
+                      </h3>
+                      <p className="text-slate-500 text-sm">
+                        Connect with <span className="font-semibold text-slate-700 dark:text-slate-300">{listing.companyName}</span> to discuss your project requirements.
+                      </p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen}>
+                        <DialogTrigger asChild>
+                          <Button className="w-full h-14 text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg shadow-blue-600/20 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]">
+                            <Mail className="w-5 h-5 mr-2" /> Contact Company
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden bg-white dark:bg-slate-950 border-0 shadow-2xl rounded-2xl">
+                          <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
+                            <DialogHeader>
+                              <DialogTitle className="text-xl font-bold text-foreground">Contact {listing.companyName}</DialogTitle>
+                              <DialogDescription>Send a detailed message to start a conversation.</DialogDescription>
+                            </DialogHeader>
+                          </div>
+                          <div className="p-6">
+                            <form onSubmit={handleInquirySubmit} className="space-y-4">
+                              <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                  <label className="text-sm font-semibold text-foreground">Your Name</label>
+                                  <Input name="name" required value={inquiryForm.name} onChange={handleInquiryChange} className="bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 h-11" />
+                                </div>
+                                <div className="space-y-2">
+                                  <label className="text-sm font-semibold text-foreground">Email Address</label>
+                                  <Input name="email" type="email" required value={inquiryForm.email} onChange={handleInquiryChange} className="bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 h-11" />
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-sm font-semibold text-foreground">Message</label>
+                                <Textarea name="message" required rows={4} value={inquiryForm.message} onChange={handleInquiryChange} placeholder="I'm interested in your listing because..." className="bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 resize-none" />
+                              </div>
+                              <Button type="submit" disabled={submittingInquiry} className="w-full bg-blue-600 hover:bg-blue-700 text-slate-950 font-bold h-12 rounded-xl text-base">
+                                {submittingInquiry ? "Sending..." : "Send Message"}
+                              </Button>
+                            </form>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+
+                      <Button variant="outline" className="w-full h-12 border-2 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-bold hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all">
+                        <Share2 className="w-4 h-4 mr-2" /> Share Listing
                       </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[500px]">
-                      <DialogHeader>
-                        <DialogTitle className="text-2xl font-bold">Contact {listing.companyName}</DialogTitle>
-                        <DialogDescription>Send a message directly to their team.</DialogDescription>
-                      </DialogHeader>
-                      <form onSubmit={handleInquirySubmit} className="space-y-4 mt-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">Name</label>
-                            <Input name="name" required value={inquiryForm.name} onChange={handleInquiryChange} />
-                          </div>
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">Email</label>
-                            <Input name="email" type="email" required value={inquiryForm.email} onChange={handleInquiryChange} />
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">Message</label>
-                          <Textarea name="message" required rows={4} value={inquiryForm.message} onChange={handleInquiryChange} placeholder="Describe your project..." />
-                        </div>
-                        <Button type="submit" disabled={submittingInquiry} className="w-full bg-amber-500 text-slate-950 font-bold">
-                          {submittingInquiry ? "Sending..." : "Send Message"}
-                        </Button>
-                      </form>
-                    </DialogContent>
-                  </Dialog>
-
-                  <Button variant="outline" className="w-full border-slate-300 dark:border-slate-700 h-12">
-                    <Share2 className="w-4 h-4 mr-2" /> Share Listing
-                  </Button>
-                </Card>
-              </motion.div>
-
-              {/* Company Info Card */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 }}
-              >
-                <Card className="p-6 rounded-2xl border-border shadow-sm">
-                  <h3 className="font-bold text-foreground mb-4 pb-4 border-b border-border">Company Details</h3>
-                  <div className="space-y-5">
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                        <MapPin className="w-5 h-5 text-slate-500" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-foreground">Location</p>
-                        <p className="text-sm text-muted-foreground">{listing.location || "Headquarters: Colombo, LK"}</p>
-                      </div>
                     </div>
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                        <Mail className="w-5 h-5 text-slate-500" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-foreground">Email</p>
-                        <p className="text-sm text-muted-foreground truncate max-w-[180px]">contact@{listing.companyName.toLowerCase().replace(/\s+/g, '')}.com</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                        <Globe className="w-5 h-5 text-slate-500" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-foreground">Website</p>
-                        <a href="#" className="text-sm text-amber-600 hover:underline">Visit Website</a>
-                      </div>
+
+                    {/* Trust Indicator */}
+                    <div className="mt-6 flex items-center justify-center gap-2 text-xs text-slate-400">
+                      <Shield className="w-3 h-3 text-emerald-500" />
+                      <span>Verified & Secure Communication</span>
                     </div>
                   </div>
                 </Card>
               </motion.div>
 
-              {/* REMOVED: Verified & Trusted / Trust Score Card */}
+              {/* COMPANY INFO CARD */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 }}
+              >
+                <Card className="rounded-3xl border-0 shadow-xl ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden bg-white dark:bg-slate-900 p-0">
+                  <div className="bg-slate-50 dark:bg-slate-800/50 px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                    <h3 className="font-bold text-slate-900 dark:text-white">Company Details</h3>
+                    <Badge variant="secondary" className="bg-white dark:bg-slate-800 shadow-sm text-xs font-normal">Active</Badge>
+                  </div>
+
+                  <div className="p-6 space-y-6">
+                    <div className="flex items-start gap-4 group">
+                      <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                        <MapPin className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Location</p>
+                        <p className="text-base font-medium text-slate-900 dark:text-white">{listing.location || "Headquarters"}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4 group">
+                      <div className="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                        <Mail className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Email</p>
+                        <p className="text-base font-medium text-slate-900 dark:text-white truncate max-w-[200px]" title={listing.companyId?.email || listing.email}>
+                          {listing.companyId?.email || listing.email}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4 group">
+                      <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                        <Globe className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Website</p>
+                        <a href="#" className="text-base font-medium text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1 transition-colors">
+                          Visit Website <ArrowRight className="w-3 h-3 -rotate-45" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
 
             </div>
           </div>

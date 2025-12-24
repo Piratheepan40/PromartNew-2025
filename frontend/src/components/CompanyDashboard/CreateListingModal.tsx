@@ -353,7 +353,7 @@ const CreateListingModal = ({
                 {formData.keyFeatures.map((feature, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-xs sm:text-sm text-amber-800 max-w-full"
+                    className="flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-xs sm:text-sm text-blue-800 max-w-full"
                   >
                     <span className="truncate max-w-[120px] sm:max-w-none">
                       {feature}
@@ -361,7 +361,7 @@ const CreateListingModal = ({
                     <button
                       type="button"
                       onClick={() => removeFeature(index)}
-                      className="flex-shrink-0 text-amber-600 hover:text-amber-800"
+                      className="flex-shrink-0 text-blue-600 hover:text-blue-800"
                       aria-label={`Remove ${feature}`}
                     >
                       <X className="h-3 w-3" />
