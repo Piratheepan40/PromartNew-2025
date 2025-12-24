@@ -42,12 +42,7 @@ const About = () => {
     },
   ];
 
-  const stats = [
-    { number: '10,000+', label: 'Verified Professionals' },
-    { number: '50,000+', label: 'Project Connections' },
-    { number: '150+', label: 'Countries Served' },
-    { number: '98%', label: 'Client Satisfaction' },
-  ];
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -163,26 +158,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Stats Section - Using light gradient from Index */}
-      <section className="border-y bg-gradient-to-br from-slate-50 to-blue-50/20 py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="text-center"
-              >
-                <p className="mb-2 text-4xl font-bold text-blue-500">{stat.number}</p>
-                <p className="text-sm text-slate-600">{stat.label}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* Values Section */}
       <section className="py-20 bg-background">

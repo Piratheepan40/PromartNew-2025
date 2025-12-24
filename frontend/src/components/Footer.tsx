@@ -26,7 +26,7 @@ const Footer = () => {
               <img
                 src={logo}
                 alt="ProMart"
-                className="h-16 brightness-0 invert"
+                className="h-24 w-auto brightness-0 invert"
               />
             </Link>
             <p className="text-sm text-slate-300 mb-3 max-w-xs">
