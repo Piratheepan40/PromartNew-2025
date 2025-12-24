@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../config/db.js";
 
@@ -23,3 +24,23 @@ Contact.init(
 );
 
 export default Contact;
+=======
+import mongoose from "mongoose";
+
+const contactSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    subject: { type: String, required: true },
+    message: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ["new", "read", "replied"],
+      default: "new",
+    },
+  },
+  { timestamps: true }
+);
+
+export default mongoose.model("Contact", contactSchema);
+>>>>>>> 88e4a28 (Contact Us code added)

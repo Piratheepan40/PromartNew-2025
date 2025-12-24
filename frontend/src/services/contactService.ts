@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import API from "../api/API";
 
 // console.log("🔗 API Base URL:", API.defaults.baseURL);
@@ -17,4 +18,25 @@ export const deleteContact = async (id) => {
 export const updateContactStatus = async (id, status) => {
   const { data } = await API.patch(`/contact/${id}`, { status }); // ✅ use PATCH not PUT
   return data;
+=======
+import API from "../api/API";
+
+console.log("🔗 API URL:", `${API}/contact`);
+// ✅ Fetch all contacts (for admin)
+export const getContacts = async () => {
+  const res = await API.get("/contact");
+  return await res.data;
+};
+
+// ✅ Delete contact (for admin)
+export const deleteContact = async (id) => {
+  const res = await API.delete(`/contact/${id}`);
+  return await res.data;
+};
+
+// ✅ Update status (for admin)
+export const updateContactStatus = async (id, status) => {
+  const { data } = await API.patch(`/contact/${id}`, { status }); // ✅ use PATCH not PUT
+  return data;
+>>>>>>> 88e4a28 (Contact Us code added)
 };
